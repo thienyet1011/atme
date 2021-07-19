@@ -9,7 +9,7 @@ const prefix = process.env.NEXT_PUBLIC_BASE_PATH || '';
 
 export default function ProductsCarousel() {
   return (
-    <Carousels isRTL={false} className="carousel-container">
+    <Carousels>
       <Container>
         <Row style={{ minHeight: "290px" }}>
           <Col md={4}>
