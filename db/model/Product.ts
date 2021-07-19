@@ -1,385 +1,461 @@
+import { Connection } from "mysql";
+
 import { ProductModel } from "../../model/Product";
-import { connect } from '../index';
+import { connect, query } from "../index";
 
 async function getProducts(page: number = 1) {
-    const db = await connect();
+  var products: ProductModel[] = [];
+  var totalPages: number = 0;
+
+  try {
+    const connection: Connection = await connect();
 
     const rowsPerPage = parseInt(process.env.ROWS_PER_PAGE);
     const offset = (page - 1) * rowsPerPage;
 
-    const params = {
-        '@parent': 0,
-        '@deleteFlag': 0,
-    };
+    const params = [0, 0, 0];
 
     const columns = `Product.id, Product.title, Product.alt, Product.image, Product.price, 
         Product.discount, Product.feature, Category.id AS categoryId, Category.alt AS categoryAlt,
         Product.showPrice, Product.keywords, Product.description`;
 
-    const productsPromise = db.all<ProductModel[]>(`
+    products = await query<ProductModel[]>(
+      connection,
+      `
         SELECT ${columns} FROM Category, Product 
         WHERE Category.id = Product.CategoryId  
-            AND (@parent IS NULL OR @parent = Product.parent)
-            AND Category.deleteFlag = @deleteFlag 
-            AND Product.deleteFlag = @deleteFlag 
-        LIMIT @rowsPerPage OFFSET @offset
-    `, {
-        ...params,
-        '@rowsPerPage': rowsPerPage,
-        '@offset': offset,
-    });
+            AND Product.parent = ?
+            AND Category.deleteFlag = ?
+            AND Product.deleteFlag = ?
+        LIMIT ? OFFSET ?
+    `,
+      [...params, rowsPerPage, offset]
+    );
 
-    const totalRowsPromise = db.get<{Count: number}>(`
+    const totalRows = await query<{ Count: number }>(
+      connection,
+      `
         SELECT COUNT(Product.id) AS Count FROM Category, Product 
         WHERE Category.id = Product.CategoryId  
-            AND (@parent IS NULL OR @parent = Product.parent)
-            AND Category.deleteFlag = @deleteFlag 
-            AND Product.deleteFlag = @deleteFlag 
-    `, {
-        ...params,
-    });
+            AND Product.parent = ?
+            AND Category.deleteFlag = ? 
+            AND Product.deleteFlag = ? 
+    `,
+      params
+    );
 
-    const [products, totalRows] = await Promise.all([productsPromise, totalRowsPromise]);
+    totalPages = Math.ceil(totalRows.Count / rowsPerPage);
+    connection.end();
+  } catch (err) {
+    console.log("Error: ", err.message);
+  }
 
-    db.close();
-  
-    return {products, totalPages: Math.ceil(totalRows.Count / rowsPerPage)};
-};
+  return { products, totalPages };
+}
 
 async function getProductsFeature(page: number = 1) {
-    const db = await connect();
+  var products: ProductModel[] = [];
+  var totalPages: number = 0;
+
+  try {
+    const connection: Connection = await connect();
 
     const rowsPerPage = parseInt(process.env.ROWS_PER_PAGE);
     const offset = (page - 1) * rowsPerPage;
 
-    const params = {
-        '@feature': 1,
-        '@parent': 0,
-        '@deleteFlag': 0,
-    };
+    const params = [1, 0, 0, 0];
 
     const columns = `Product.id, Product.title, Product.alt, Product.image, Product.price, 
         Product.discount, Product.feature, Category.id AS categoryId, Category.alt AS categoryAlt,
         Product.showPrice, Product.keywords, Product.description`;
 
-    const productsPromise = db.all<ProductModel[]>(`
+    products = await query<ProductModel[]>(
+      connection,
+      `
         SELECT ${columns} FROM Category, Product 
         WHERE Category.id = Product.CategoryId  
-            AND (@feature IS NULL OR @feature = Product.feature)
-            AND (@parent IS NULL OR @parent = Product.parent)
-            AND Category.deleteFlag = @deleteFlag 
-            AND Product.deleteFlag = @deleteFlag 
-        LIMIT @rowsPerPage OFFSET @offset
-    `, {
-        ...params,
-        '@rowsPerPage': rowsPerPage,
-        '@offset': offset,
-    });
+            AND Product.feature = ?
+            AND Product.parent = ?
+            AND Category.deleteFlag = ? 
+            AND Product.deleteFlag = ? 
+        LIMIT ? OFFSET ?
+    `,
+      [...params, rowsPerPage, offset]
+    );
 
-    const totalRowsPromise = db.get<{Count: number}>(`
+    const totalRows = await query<{ Count: number }>(
+      connection,
+      `
         SELECT COUNT(Product.id) AS Count FROM Category, Product 
         WHERE Category.id = Product.CategoryId  
-            AND (@feature IS NULL OR @feature = Product.feature)
-            AND (@parent IS NULL OR @parent = Product.parent)
-            AND Category.deleteFlag = @deleteFlag 
-            AND Product.deleteFlag = @deleteFlag 
-    `, {
-        ...params,
-    });
+            AND Product.feature = ?
+            AND Product.parent = ?
+            AND Category.deleteFlag = ? 
+            AND Product.deleteFlag = ? 
+    `,
+      params
+    );
 
-    const [products, totalRows] = await Promise.all([productsPromise, totalRowsPromise]);
+    totalPages = Math.ceil(totalRows.Count / rowsPerPage);
+    connection.end();
+  } catch (err) {
+    console.log("Error: ", err.message);
+  }
 
-    db.close();
-  
-    return {products, totalPages: Math.ceil(totalRows.Count / rowsPerPage)};
-};
+  return { products, totalPages };
+}
 
 async function getProductsByCategoryId(categoryId: number) {
-    const db = await connect();
+  var products: ProductModel[] = [];
 
-    const params = {
-        '@categoryId': categoryId,
-        '@parent': 0,
-        '@deleteFlag': 0,
-    };
+  try {
+    const connection: Connection = await connect();
+
+    const params = [categoryId, 0, 0, 0];
 
     const columns = `Product.id, Product.title, Product.alt, Product.image, Product.price, 
         Product.discount, Product.feature, Category.id AS categoryId, Category.alt AS categoryAlt,
         Product.showPrice, Product.keywords, Product.description`;
 
-    const productsPromise = db.all<ProductModel[]>(`
+    products = await query<ProductModel[]>(
+      connection,
+      `
         SELECT ${columns} FROM Category, Product 
         WHERE Category.id = Product.CategoryId
-            AND (@categoryId IS NULL OR @categoryId = Product.categoryId)
-            AND (@parent IS NULL OR @parent = Product.parent)
-            AND Category.deleteFlag = @deleteFlag 
-            AND Product.deleteFlag = @deleteFlag 
-    `, params);
+            AND Product.categoryId = ?
+            AND Product.parent = ?
+            AND Category.deleteFlag = ? 
+            AND Product.deleteFlag = ? 
+    `,
+      params
+    );
 
-    const [products] = await Promise.all([productsPromise]);
+    connection.end();
+  } catch (err) {
+    console.log("Error: ", err.message);
+  }
 
-    db.close();
-  
-    return products;
-};
+  return products;
+}
 
-async function getProductsPageByCategoryId(categoryId: number, page: number = 1) {
-    const db = await connect();
+async function getProductsPageByCategoryId(
+  categoryId: number,
+  page: number = 1
+) {
+  var products: ProductModel[] = [];
+  var totalPages: number = 0;
+
+  try {
+    const connection: Connection = await connect();
 
     const rowsPerPage = parseInt(process.env.ROWS_PER_PAGE);
     const offset = (page - 1) * rowsPerPage;
 
-    const params = {
-        '@categoryId': categoryId,
-        '@parent': 0,
-        '@deleteFlag': 0,
-    };
+    const params = [categoryId, 0, 0, 0];
 
     const columns = `Product.id, Product.title, Product.alt, Product.image, Product.price, 
         Product.discount, Product.feature, Category.id AS categoryId, Category.alt AS categoryAlt,
         Product.showPrice, Product.keywords, Product.description`;
 
-    const productsPromise = db.all<ProductModel[]>(`
+    products = await query<ProductModel[]>(
+      connection,
+      `
         SELECT ${columns} FROM Category, Product 
         WHERE Category.id = Product.CategoryId
-            AND (@categoryId IS NULL OR @categoryId = Product.categoryId)
-            AND (@parent IS NULL OR @parent = Product.parent)
-            AND Category.deleteFlag = @deleteFlag 
-            AND Product.deleteFlag = @deleteFlag 
-            LIMIT @rowsPerPage OFFSET @offset
-    `, {
-        ...params,
-        '@rowsPerPage': rowsPerPage,
-        '@offset': offset,
-    });
+            AND Product.categoryId = ? 
+            AND Product.parent = ? 
+            AND Category.deleteFlag = ? 
+            AND Product.deleteFlag = ? 
+            LIMIT ? OFFSET ?
+    `,
+      [...params, rowsPerPage, offset]
+    );
 
-    const totalRowsPromise = db.get<{Count: number}>(`
+    const totalRows = await query<{ Count: number }>(
+      connection,
+      `
         SELECT COUNT(Product.id) AS Count FROM Category, Product 
         WHERE Category.id = Product.CategoryId
-            AND (@categoryId IS NULL OR @categoryId = Product.categoryId)
-            AND (@parent IS NULL OR @parent = Product.parent)
-            AND Category.deleteFlag = @deleteFlag 
-            AND Product.deleteFlag = @deleteFlag 
-    `, {
-        ...params,
-    });
+            AND Product.categoryId = ? 
+            AND Product.parent = ? 
+            AND Category.deleteFlag = ? 
+            AND Product.deleteFlag = ? 
+    `,
+      params
+    );
 
-    const [products, totalRows] = await Promise.all([productsPromise, totalRowsPromise]);
+    totalPages = Math.ceil(totalRows.Count / rowsPerPage);
+    connection.end();
+  } catch (err) {
+    console.log("Error: ", err.message);
+  }
 
-    db.close();
-  
-    return {products, totalPages: Math.ceil(totalRows.Count / rowsPerPage)};
-};
+  return { products, totalPages };
+}
 
-async function getSimilarProductsByCategoryId(categoryId: number, productId: number) {
-    const db = await connect();
+async function getSimilarProductsByCategoryId(
+  categoryId: number,
+  productId: number
+) {
+  var products: ProductModel[] = [];
 
-    const params = {
-        '@categoryId': categoryId,
-        '@productId': productId,
-        '@parent': 0,
-        '@deleteFlag': 0,
-    };
+  try {
+    const connection: Connection = await connect();
+
+    const params = [categoryId, productId, 0, 0, 0];
 
     const columns = `Product.id, Product.title, Product.alt, Product.image, Product.price, 
         Product.discount, Product.feature, Category.id AS categoryId, Category.alt AS categoryAlt,
         Product.showPrice, Product.keywords, Product.description`;
 
-    const productsPromise = db.all<ProductModel[]>(`
+    products = await query<ProductModel[]>(
+      connection,
+      `
         SELECT ${columns} FROM Category, Product 
         WHERE Category.id = Product.CategoryId
-            AND (@categoryId IS NULL OR @categoryId = Product.categoryId)
-            AND (@productId IS NULL OR @productId != Product.id)
-            AND (@parent IS NULL OR @parent = Product.parent)
-            AND Category.deleteFlag = @deleteFlag 
-            AND Product.deleteFlag = @deleteFlag 
-    `, params);
+            AND Product.categoryId = ?
+            AND Product.id != ? 
+            AND Product.parent = ?
+            AND Category.deleteFlag = ? 
+            AND Product.deleteFlag = ? 
+    `,
+      params
+    );
 
-    const [products] = await Promise.all([productsPromise]);
+    connection.end();
+  } catch (err) {
+    console.log("Error: ", err.message);
+  }
 
-    db.close();
-  
-    return products;
-};
+  return products;
+}
 
 async function getSubProducts(categoryId: number, parent: number) {
-    const db = await connect();
+  var products: ProductModel[] = [];
 
-    const params = {
-        '@categoryId': categoryId,
-        '@parent': parent,
-        '@deleteFlag': 0,
-    };
+  try {
+    const connection: Connection = await connect();
+
+    const params = [categoryId, parent, 0, 0];
 
     const columns = `Product.id, Product.title, Product.alt, Product.image, Product.price, 
         Product.discount, Product.feature, Category.id AS categoryId, Category.alt AS categoryAlt,
         Product.showPrice, Product.keywords, Product.description`;
 
-    const productsPromise = db.all<ProductModel[]>(`
+    products = await query<ProductModel[]>(
+      connection,
+      `
         SELECT ${columns} FROM Category, Product 
         WHERE Category.id = Product.CategoryId
-            AND (@categoryId IS NULL OR @categoryId = Product.categoryId)
-            AND (@parent IS NULL OR @parent = Product.parent)
-            AND Category.deleteFlag = @deleteFlag 
-            AND Product.deleteFlag = @deleteFlag
-    `, {
-        ...params,
-    });
+            AND Product.categoryId = ? 
+            AND Product.parent = ? 
+            AND Category.deleteFlag = ? 
+            AND Product.deleteFlag = ?
+    `,
+      params
+    );
 
-    const [products] = await Promise.all([productsPromise]);
+    connection.end();
+  } catch (err) {
+    console.log("Error: ", err.message);
+  }
 
-    db.close();
-  
-    return products;
-};
+  return products;
+}
 
 async function getProductById(id: number) {
-    const db = await connect();
+  var product: ProductModel = null;
 
-    const params = {
-        '@id': id,
-        '@deleteFlag': 0,
-    };
+  try {
+    const connection: Connection = await connect();
+
+    const params = [id, 0, 0];
 
     const columns = `Product.id, Product.title, Product.alt, Product.image, Product.price, 
         Product.discount, Product.feature, Category.id AS categoryId, Category.alt AS categoryAlt,
         Product.showPrice, Product.keywords, Product.description, Product.status, Product.quantity,
         Product.specifications`;
 
-    const productPromise = db.get<ProductModel>(`
+    product = await query<ProductModel>(
+      connection,
+      `
         SELECT ${columns} FROM Category, Product 
         WHERE Category.id = Product.CategoryId 
-            AND Product.id = @id  
-            AND Category.deleteFlag = @deleteFlag 
-            AND Product.deleteFlag = @deleteFlag
-    `, {
-        ...params,
-    });
+            AND Product.id = ?  
+            AND Category.deleteFlag = ? 
+            AND Product.deleteFlag = ?
+    `,
+      params
+    );
 
-    const [product] = await Promise.all([productPromise]);
+    connection.end();
+  } catch (err) {
+    console.log("Error: ", err.message);
+  }
 
-    db.close();
-  
-    return product;
-};
+  return product;
+}
 
-async function add(title: string, alt: string, image: string, price: number, discount: number, feature: number, 
-    categoryId: number, showPrice: number, keywords: string, description: string, 
-    parent: number, status: number, quanity: number, specifications: string, createdBy: string, createdDate: string) {
-    const db = await connect();
+async function add(
+  title: string,
+  alt: string,
+  image: string,
+  price: number,
+  discount: number,
+  feature: number,
+  categoryId: number,
+  showPrice: number,
+  keywords: string,
+  description: string,
+  parent: number,
+  status: number,
+  quanity: number,
+  specifications: string,
+  createdBy: string,
+  createdDate: string
+) {
+  var success = false;
 
-    try {
-        const stmt = `INSERT INTO Product (title, alt, image, price, discount, feature, categoryId, showPrice, keywords, 
+  try {
+    const connection: Connection = await connect();
+
+    const stmt = `INSERT INTO Product (title, alt, image, price, discount, feature, categoryId, showPrice, keywords, 
                 description, parent, status, quantity, specifications, createdBy, createdDate, deleteFlag) 
             VALUES (@title, @alt, @image, @price, @discount, @feature, @categoryId, @showPrice, @keywords, 
                 @description, @parent, @status, @quantity, @specifications, @createdBy, @createdDate, @deleteFlag)`;
 
-        const params ={
-            '@title': title,
-            '@alt': alt,
-            '@image': image,
-            '@price': price,
-            '@discount': discount,
-            '@feature': feature,
-            '@categoryId': categoryId,
-            '@showPrice': showPrice,
-            '@keywords': keywords,
-            '@description': description,
-            '@parent': parent,
-            '@status': status,
-            '@quantity': quanity,
-            '@specifications': specifications,
-            '@createdBy': createdBy,
-            '@createdDate': createdDate,
-            '@deleteFlag': 0
-        };
+    const params = {
+      "@title": title,
+      "@alt": alt,
+      "@image": image,
+      "@price": price,
+      "@discount": discount,
+      "@feature": feature,
+      "@categoryId": categoryId,
+      "@showPrice": showPrice,
+      "@keywords": keywords,
+      "@description": description,
+      "@parent": parent,
+      "@status": status,
+      "@quantity": quanity,
+      "@specifications": specifications,
+      "@createdBy": createdBy,
+      "@createdDate": createdDate,
+      "@deleteFlag": 0,
+    };
 
-        const {lastID} = await db.run(stmt, params);
-        return lastID;
-    }
-    finally {
-        db.close();
-    }
-};
+    const results = await query(connection, stmt, params);
+    success = results > 0;
 
-async function update(id: number,title: string, alt: string, image: string, price: number, discount: number, 
-    feature: number, categoryId: number, showPrice: number, keywords: string, description: string, 
-    parent: number, status: number, quanity: number, specifications: string, modifiedBy: string, modifiedDate: string) {
-    var success = false;
-    const db = await connect();
+    connection.end();
+  } catch (err) {
+    console.log("Error: ", err.message);
+  }
 
-    try {
-        const stmt = `UPDATE Product 
+  return success;
+}
+
+async function update(
+  id: number,
+  title: string,
+  alt: string,
+  image: string,
+  price: number,
+  discount: number,
+  feature: number,
+  categoryId: number,
+  showPrice: number,
+  keywords: string,
+  description: string,
+  parent: number,
+  status: number,
+  quanity: number,
+  specifications: string,
+  modifiedBy: string,
+  modifiedDate: string
+) {
+  var success = false;
+
+  try {
+    const connection: Connection = await connect();
+
+    const stmt = `UPDATE Product 
             SET title = @title, alt = @alt, image = @image, price = @price, discount = @discount, feature = @feature, 
                 categoryId = @categoryId, showPrice = @showPrice, keywords = @keywords, description = @description, 
                 parent = @parent, status = @status, quantity = @quantity, specifications = @specifications, 
                 modifiedBy = @modifiedBy, modifiedDate = @modifiedDate) 
             WHERE id = @id`;
 
-        const params ={
-            '@id': id,
-            '@title': title,
-            '@alt': alt,
-            '@image': image,
-            '@price': price,
-            '@discount': discount,
-            '@feature': feature,
-            '@categoryId': categoryId,
-            '@showPrice': showPrice,
-            '@keywords': keywords,
-            '@description': description,
-            '@parent': parent,
-            '@status': status,
-            '@quantity': quanity,
-            '@specifications': specifications,
-            '@modifiedBy': modifiedBy,
-            '@modifiedDate': modifiedDate,
-        };
+    const params = {
+      "@id": id,
+      "@title": title,
+      "@alt": alt,
+      "@image": image,
+      "@price": price,
+      "@discount": discount,
+      "@feature": feature,
+      "@categoryId": categoryId,
+      "@showPrice": showPrice,
+      "@keywords": keywords,
+      "@description": description,
+      "@parent": parent,
+      "@status": status,
+      "@quantity": quanity,
+      "@specifications": specifications,
+      "@modifiedBy": modifiedBy,
+      "@modifiedDate": modifiedDate,
+    };
 
-        db.run(stmt, params, (err) => {
-            if (!err) { success = true; }
-        });
-    }
-    finally {
-        db.close();
-    }
-  
-    return success;
-};
+    const results = await query(connection, stmt, params);
+    success = results > 0;
 
-async function remove(id: number, deleteFlag: number, modifiedBy: string, modifiedDate: string) {
-    var success = false;
-    const db = await connect();
+    connection.end();
+  } catch (err) {
+    console.log("Error: ", err.message);
+  }
 
-    try {
-        const stmt = `UPDATE Product 
+  return success;
+}
+
+async function remove(
+  id: number,
+  deleteFlag: number,
+  modifiedBy: string,
+  modifiedDate: string
+) {
+  var success = false;
+
+  try {
+    const connection: Connection = await connect();
+
+    const stmt = `UPDATE Product 
             SET deleteFlag = @deleteFlag, modifiedBy = @modifiedBy, modifiedDate = @modifiedDate) 
             WHERE id = @id`;
 
-        const params ={
-            '@id': id,
-            '@deleteFlag': deleteFlag,
-            '@modifiedBy': modifiedBy,
-            '@modifiedDate': modifiedDate,
-        };
+    const params = {
+      "@id": id,
+      "@deleteFlag": deleteFlag,
+      "@modifiedBy": modifiedBy,
+      "@modifiedDate": modifiedDate,
+    };
 
-        db.run(stmt, params, (err) => {
-            if (!err) { success = true; }
-        });
-    }
-    finally {
-        db.close();
-    }
-  
-    return success;
-};
+    const results = await query(connection, stmt, params);
+    success = results > 0;
+
+    connection.end();
+  } catch (err) {
+    console.log("Error: ", err.message);
+  }
+
+  return success;
+}
 
 export default {
   getProducts,
   getProductsFeature,
   getProductsByCategoryId,
   getProductsPageByCategoryId,
-  getSimilarProductsByCategoryId, 
+  getSimilarProductsByCategoryId,
   getSubProducts,
   getProductById,
   add,
