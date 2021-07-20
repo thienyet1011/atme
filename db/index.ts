@@ -1,6 +1,7 @@
+import { RowDataPacket } from 'mysql2';
 // https://www.freemysqlhosting.net/account/
 
-import mysql, { Connection } from 'mysql';
+import mysql, { Connection } from 'mysql2';
 
 const connectionConfig = {
   host: process.env.DATABASE_HOST,
@@ -22,7 +23,7 @@ export const connect = () => {
   });
 };
 
-export const query = <T>(connection: Connection, sql: string, params: any) => {
+export const query = <T extends RowDataPacket[]>(connection: Connection, sql: string, params: any) => {
   return new Promise<T>((resolve, reject) => {
     const handler = (error, result) => {
       if (error) {
@@ -32,6 +33,6 @@ export const query = <T>(connection: Connection, sql: string, params: any) => {
       resolve(result);
     };
 
-    connection.query(sql, params, handler);
+    connection.query<T>(sql, params, handler);
   });
 };

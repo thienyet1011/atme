@@ -1,7 +1,8 @@
-import { Connection } from "mysql";
+import { Connection } from "mysql2";
+
+import { connect, query } from "../index";
 
 import { ProductModel } from "../../model/Product";
-import { connect, query } from "../index";
 
 async function getProducts(page: number = 1) {
   var products: ProductModel[] = [];
@@ -19,7 +20,7 @@ async function getProducts(page: number = 1) {
         Product.discount, Product.feature, Category.id AS categoryId, Category.alt AS categoryAlt,
         Product.showPrice, Product.keywords, Product.description`;
 
-    products = await query<ProductModel[]>(
+    var results = await query(
       connection,
       `
         SELECT ${columns} FROM Category, Product 
@@ -32,7 +33,9 @@ async function getProducts(page: number = 1) {
       [...params, rowsPerPage, offset]
     );
 
-    const totalRows = await query<{ Count: number }>(
+    products = <ProductModel[]>JSON.parse(JSON.stringify(results));
+
+    results = await query(
       connection,
       `
         SELECT COUNT(Product.id) AS Count FROM Category, Product 
@@ -44,6 +47,7 @@ async function getProducts(page: number = 1) {
       params
     );
 
+    const totalRows = <{Count: number}>JSON.parse(JSON.stringify(results));
     totalPages = Math.ceil(totalRows.Count / rowsPerPage);
     connection.end();
   } catch (err) {
@@ -69,7 +73,7 @@ async function getProductsFeature(page: number = 1) {
         Product.discount, Product.feature, Category.id AS categoryId, Category.alt AS categoryAlt,
         Product.showPrice, Product.keywords, Product.description`;
 
-    products = await query<ProductModel[]>(
+    var results = await query(
       connection,
       `
         SELECT ${columns} FROM Category, Product 
@@ -83,7 +87,9 @@ async function getProductsFeature(page: number = 1) {
       [...params, rowsPerPage, offset]
     );
 
-    const totalRows = await query<{ Count: number }>(
+    products = <ProductModel[]>JSON.parse(JSON.stringify(results));
+
+    results = await query(
       connection,
       `
         SELECT COUNT(Product.id) AS Count FROM Category, Product 
@@ -96,6 +102,7 @@ async function getProductsFeature(page: number = 1) {
       params
     );
 
+    const totalRows = <{Count: number}>JSON.parse(JSON.stringify(results[0]));
     totalPages = Math.ceil(totalRows.Count / rowsPerPage);
     connection.end();
   } catch (err) {
@@ -117,7 +124,7 @@ async function getProductsByCategoryId(categoryId: number) {
         Product.discount, Product.feature, Category.id AS categoryId, Category.alt AS categoryAlt,
         Product.showPrice, Product.keywords, Product.description`;
 
-    products = await query<ProductModel[]>(
+    const results = await query(
       connection,
       `
         SELECT ${columns} FROM Category, Product 
@@ -130,6 +137,7 @@ async function getProductsByCategoryId(categoryId: number) {
       params
     );
 
+    products = <ProductModel[]>JSON.parse(JSON.stringify(results));
     connection.end();
   } catch (err) {
     console.log("Error: ", err.message);
@@ -157,7 +165,7 @@ async function getProductsPageByCategoryId(
         Product.discount, Product.feature, Category.id AS categoryId, Category.alt AS categoryAlt,
         Product.showPrice, Product.keywords, Product.description`;
 
-    products = await query<ProductModel[]>(
+    var results = await query(
       connection,
       `
         SELECT ${columns} FROM Category, Product 
@@ -170,8 +178,10 @@ async function getProductsPageByCategoryId(
     `,
       [...params, rowsPerPage, offset]
     );
+    
+    products = <ProductModel[]>JSON.parse(JSON.stringify(results));
 
-    const totalRows = await query<{ Count: number }>(
+    results = await query(
       connection,
       `
         SELECT COUNT(Product.id) AS Count FROM Category, Product 
@@ -184,6 +194,7 @@ async function getProductsPageByCategoryId(
       params
     );
 
+    const totalRows = <{Count: number}>JSON.parse(JSON.stringify(results[0]));
     totalPages = Math.ceil(totalRows.Count / rowsPerPage);
     connection.end();
   } catch (err) {
@@ -208,7 +219,7 @@ async function getSimilarProductsByCategoryId(
         Product.discount, Product.feature, Category.id AS categoryId, Category.alt AS categoryAlt,
         Product.showPrice, Product.keywords, Product.description`;
 
-    products = await query<ProductModel[]>(
+    const results = await query(
       connection,
       `
         SELECT ${columns} FROM Category, Product 
@@ -222,6 +233,7 @@ async function getSimilarProductsByCategoryId(
       params
     );
 
+    products = <ProductModel[]>JSON.parse(JSON.stringify(results));
     connection.end();
   } catch (err) {
     console.log("Error: ", err.message);
@@ -242,7 +254,7 @@ async function getSubProducts(categoryId: number, parent: number) {
         Product.discount, Product.feature, Category.id AS categoryId, Category.alt AS categoryAlt,
         Product.showPrice, Product.keywords, Product.description`;
 
-    products = await query<ProductModel[]>(
+    const results = await query(
       connection,
       `
         SELECT ${columns} FROM Category, Product 
@@ -255,6 +267,7 @@ async function getSubProducts(categoryId: number, parent: number) {
       params
     );
 
+    products = <ProductModel[]>JSON.parse(JSON.stringify(results));
     connection.end();
   } catch (err) {
     console.log("Error: ", err.message);
@@ -276,7 +289,7 @@ async function getProductById(id: number) {
         Product.showPrice, Product.keywords, Product.description, Product.status, Product.quantity,
         Product.specifications`;
 
-    product = await query<ProductModel>(
+    const results = await query(
       connection,
       `
         SELECT ${columns} FROM Category, Product 
@@ -288,6 +301,7 @@ async function getProductById(id: number) {
       params
     );
 
+    product = results.length > 0 ? <ProductModel>JSON.parse(JSON.stringify(results[0])) : null;
     connection.end();
   } catch (err) {
     console.log("Error: ", err.message);
@@ -296,159 +310,159 @@ async function getProductById(id: number) {
   return product;
 }
 
-async function add(
-  title: string,
-  alt: string,
-  image: string,
-  price: number,
-  discount: number,
-  feature: number,
-  categoryId: number,
-  showPrice: number,
-  keywords: string,
-  description: string,
-  parent: number,
-  status: number,
-  quanity: number,
-  specifications: string,
-  createdBy: string,
-  createdDate: string
-) {
-  var success = false;
+// async function add(
+//   title: string,
+//   alt: string,
+//   image: string,
+//   price: number,
+//   discount: number,
+//   feature: number,
+//   categoryId: number,
+//   showPrice: number,
+//   keywords: string,
+//   description: string,
+//   parent: number,
+//   status: number,
+//   quanity: number,
+//   specifications: string,
+//   createdBy: string,
+//   createdDate: string
+// ) {
+//   var success = false;
 
-  try {
-    const connection: Connection = await connect();
+//   try {
+//     const connection: Connection = await connect();
 
-    const stmt = `INSERT INTO Product (title, alt, image, price, discount, feature, categoryId, showPrice, keywords, 
-                description, parent, status, quantity, specifications, createdBy, createdDate, deleteFlag) 
-            VALUES (@title, @alt, @image, @price, @discount, @feature, @categoryId, @showPrice, @keywords, 
-                @description, @parent, @status, @quantity, @specifications, @createdBy, @createdDate, @deleteFlag)`;
+//     const stmt = `INSERT INTO Product (title, alt, image, price, discount, feature, categoryId, showPrice, keywords, 
+//                 description, parent, status, quantity, specifications, createdBy, createdDate, deleteFlag) 
+//             VALUES (@title, @alt, @image, @price, @discount, @feature, @categoryId, @showPrice, @keywords, 
+//                 @description, @parent, @status, @quantity, @specifications, @createdBy, @createdDate, @deleteFlag)`;
 
-    const params = {
-      "@title": title,
-      "@alt": alt,
-      "@image": image,
-      "@price": price,
-      "@discount": discount,
-      "@feature": feature,
-      "@categoryId": categoryId,
-      "@showPrice": showPrice,
-      "@keywords": keywords,
-      "@description": description,
-      "@parent": parent,
-      "@status": status,
-      "@quantity": quanity,
-      "@specifications": specifications,
-      "@createdBy": createdBy,
-      "@createdDate": createdDate,
-      "@deleteFlag": 0,
-    };
+//     const params = {
+//       "@title": title,
+//       "@alt": alt,
+//       "@image": image,
+//       "@price": price,
+//       "@discount": discount,
+//       "@feature": feature,
+//       "@categoryId": categoryId,
+//       "@showPrice": showPrice,
+//       "@keywords": keywords,
+//       "@description": description,
+//       "@parent": parent,
+//       "@status": status,
+//       "@quantity": quanity,
+//       "@specifications": specifications,
+//       "@createdBy": createdBy,
+//       "@createdDate": createdDate,
+//       "@deleteFlag": 0,
+//     };
 
-    const results = await query(connection, stmt, params);
-    success = results > 0;
+//     const results = await query(connection, stmt, params);
+//     success = results > 0;
 
-    connection.end();
-  } catch (err) {
-    console.log("Error: ", err.message);
-  }
+//     connection.end();
+//   } catch (err) {
+//     console.log("Error: ", err.message);
+//   }
 
-  return success;
-}
+//   return success;
+// }
 
-async function update(
-  id: number,
-  title: string,
-  alt: string,
-  image: string,
-  price: number,
-  discount: number,
-  feature: number,
-  categoryId: number,
-  showPrice: number,
-  keywords: string,
-  description: string,
-  parent: number,
-  status: number,
-  quanity: number,
-  specifications: string,
-  modifiedBy: string,
-  modifiedDate: string
-) {
-  var success = false;
+// async function update(
+//   id: number,
+//   title: string,
+//   alt: string,
+//   image: string,
+//   price: number,
+//   discount: number,
+//   feature: number,
+//   categoryId: number,
+//   showPrice: number,
+//   keywords: string,
+//   description: string,
+//   parent: number,
+//   status: number,
+//   quanity: number,
+//   specifications: string,
+//   modifiedBy: string,
+//   modifiedDate: string
+// ) {
+//   var success = false;
 
-  try {
-    const connection: Connection = await connect();
+//   try {
+//     const connection: Connection = await connect();
 
-    const stmt = `UPDATE Product 
-            SET title = @title, alt = @alt, image = @image, price = @price, discount = @discount, feature = @feature, 
-                categoryId = @categoryId, showPrice = @showPrice, keywords = @keywords, description = @description, 
-                parent = @parent, status = @status, quantity = @quantity, specifications = @specifications, 
-                modifiedBy = @modifiedBy, modifiedDate = @modifiedDate) 
-            WHERE id = @id`;
+//     const stmt = `UPDATE Product 
+//             SET title = @title, alt = @alt, image = @image, price = @price, discount = @discount, feature = @feature, 
+//                 categoryId = @categoryId, showPrice = @showPrice, keywords = @keywords, description = @description, 
+//                 parent = @parent, status = @status, quantity = @quantity, specifications = @specifications, 
+//                 modifiedBy = @modifiedBy, modifiedDate = @modifiedDate) 
+//             WHERE id = @id`;
 
-    const params = {
-      "@id": id,
-      "@title": title,
-      "@alt": alt,
-      "@image": image,
-      "@price": price,
-      "@discount": discount,
-      "@feature": feature,
-      "@categoryId": categoryId,
-      "@showPrice": showPrice,
-      "@keywords": keywords,
-      "@description": description,
-      "@parent": parent,
-      "@status": status,
-      "@quantity": quanity,
-      "@specifications": specifications,
-      "@modifiedBy": modifiedBy,
-      "@modifiedDate": modifiedDate,
-    };
+//     const params = {
+//       "@id": id,
+//       "@title": title,
+//       "@alt": alt,
+//       "@image": image,
+//       "@price": price,
+//       "@discount": discount,
+//       "@feature": feature,
+//       "@categoryId": categoryId,
+//       "@showPrice": showPrice,
+//       "@keywords": keywords,
+//       "@description": description,
+//       "@parent": parent,
+//       "@status": status,
+//       "@quantity": quanity,
+//       "@specifications": specifications,
+//       "@modifiedBy": modifiedBy,
+//       "@modifiedDate": modifiedDate,
+//     };
 
-    const results = await query(connection, stmt, params);
-    success = results > 0;
+//     const results = await query(connection, stmt, params);
+//     success = results > 0;
 
-    connection.end();
-  } catch (err) {
-    console.log("Error: ", err.message);
-  }
+//     connection.end();
+//   } catch (err) {
+//     console.log("Error: ", err.message);
+//   }
 
-  return success;
-}
+//   return success;
+// }
 
-async function remove(
-  id: number,
-  deleteFlag: number,
-  modifiedBy: string,
-  modifiedDate: string
-) {
-  var success = false;
+// async function remove(
+//   id: number,
+//   deleteFlag: number,
+//   modifiedBy: string,
+//   modifiedDate: string
+// ) {
+//   var success = false;
 
-  try {
-    const connection: Connection = await connect();
+//   try {
+//     const connection: Connection = await connect();
 
-    const stmt = `UPDATE Product 
-            SET deleteFlag = @deleteFlag, modifiedBy = @modifiedBy, modifiedDate = @modifiedDate) 
-            WHERE id = @id`;
+//     const stmt = `UPDATE Product 
+//             SET deleteFlag = @deleteFlag, modifiedBy = @modifiedBy, modifiedDate = @modifiedDate) 
+//             WHERE id = @id`;
 
-    const params = {
-      "@id": id,
-      "@deleteFlag": deleteFlag,
-      "@modifiedBy": modifiedBy,
-      "@modifiedDate": modifiedDate,
-    };
+//     const params = {
+//       "@id": id,
+//       "@deleteFlag": deleteFlag,
+//       "@modifiedBy": modifiedBy,
+//       "@modifiedDate": modifiedDate,
+//     };
 
-    const results = await query(connection, stmt, params);
-    success = results > 0;
+//     const results = await query(connection, stmt, params);
+//     success = results > 0;
 
-    connection.end();
-  } catch (err) {
-    console.log("Error: ", err.message);
-  }
+//     connection.end();
+//   } catch (err) {
+//     console.log("Error: ", err.message);
+//   }
 
-  return success;
-}
+//   return success;
+// }
 
 export default {
   getProducts,
@@ -458,7 +472,7 @@ export default {
   getSimilarProductsByCategoryId,
   getSubProducts,
   getProductById,
-  add,
-  update,
-  remove,
+//   add,
+//   update,
+//   remove,
 };

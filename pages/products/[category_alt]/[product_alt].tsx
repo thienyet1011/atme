@@ -277,6 +277,6 @@ export const getStaticPaths = async ({ query }) => {
 
   return {
     paths,
-    fallback: false,
+    fallback: true,
   };
 };
