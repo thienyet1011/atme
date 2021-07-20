@@ -42,22 +42,22 @@ export default function getHandler() {
     res.status(405).json({ error: `Method ${req.method} Not Allowed` });
   },
 })
-.use(async (req, res, next) => {
-  // Run the middleware
-  try {
-    const result = await enableCors(req, res, cors);
-    next();
-  }
-  catch(err) {
-    return  res.status(200).json({
-      payload: {
-        success: true,
-        status: 200,
-        error: `Sorry something wrong! ${err.message}`
-      },
-    });
-  }
-})
+// .use(async (req, res, next) => {
+//   // Run the middleware
+//   try {
+//     const result = await enableCors(req, res, cors);
+//     next();
+//   }
+//   catch(err) {
+//     return  res.status(200).json({
+//       payload: {
+//         success: true,
+//         status: 200,
+//         error: `Sorry something wrong! ${err.message}`
+//       },
+//     });
+//   }
+// })
 .use((req, res, next) => {
   req._id = null;
   req.username = null;
