@@ -12,7 +12,6 @@ import { QueryClient, QueryClientProvider } from 'react-query';
 
 import { AppProvider } from '../context';
 import { CategoryModel } from 'model/Category';
-import axios from 'axios';
 
 const queryClient = new QueryClient();
 
@@ -36,13 +35,6 @@ export async function getServerSideProps(context) {
   return {
     props: {}, // will be passed to the page component as props
   }
-}
-
-MyApp.getInitialProps = async (appContext) => {
-  const response = await axios.get('/api/categories');
-  const categories = response.data;
-
-  return { categories };
 }
 
 export default MyApp;
