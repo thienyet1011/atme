@@ -4,8 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
-    "postbuild": "next-on-netlify"
+    "build": "next build"
   },
   "dependencies": {
     "@netlify/plugin-nextjs": "^3.7.1",
