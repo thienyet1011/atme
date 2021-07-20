@@ -12,6 +12,7 @@ import { QueryClient, QueryClientProvider } from 'react-query';
 
 import { AppProvider } from '../context';
 import { CategoryModel } from 'model/Category';
+import axios from 'axios';
 
 const queryClient = new QueryClient();
 
@@ -32,8 +33,8 @@ const MyApp = ({ Component, pageProps, categories }: MyAppProps) => {
 }
 
 MyApp.getInitialProps = async (ctx) => {
-  const res = await fetch('api/categories');
-  const categories = await res.json();
+  const res = await axios.get('api/categories');
+  const categories = res.data;
   return { categories };
 }
 
