@@ -16,7 +16,7 @@ import { getCategories } from './api/categories';
 import { ProductModel } from '../model/Product';
 import { getProductsFeature } from './api/products/feature';
 
-import { onCompleted } from '../utils';
+import { getValueAsNumber, onCompleted } from '../utils';
 
 import Layout from '../components/layout';
 import Pagination from '../components/Pagination';
@@ -35,35 +35,19 @@ export interface HomeProps {
 }
 
 export default function Home({products, totalPages, categories}: HomeProps) {
-  const queryClient = useQueryClient();
   const router = useRouter();
 
-  const { setData, setPage } = useAppContext();  
-
   const {query} = router;
-  const [serverQuery] = useState(query);
+  const {setData, setPage} = useAppContext();  
 
   useEffect(() => {
     setData(categories);
     setPage(0);
-  }, [setData, setPage])
-
-  // Fetch fb from API
-  const { isLoading, data } = useQuery([GET_FEATURE_PRODUCTS, query], 
-    () => getProductsFeatureFn({page: query.page}), 
-    {
-      enabled: true,
-      initialData: deepEqual(query, serverQuery) 
-        ? {products, totalPages}
-        : undefined,
-      keepPreviousData: true,
-      staleTime: 15000,
-      onSettled: (data, err) => onCompleted(data, err, router, queryClient)
-    });
+  }, [setData, setPage]);
 
   return (
     <React.Fragment>
-      <div className={`loading-overlay, ${isLoading ? "d-block" : "d-none"}`}>
+      <div className={`loading-overlay, ${router.isFallback ? "d-block" : "d-none"}`}>
         <Spinner className="spinner-md" animation="border" variant="warning" />
       </div>
 
@@ -113,11 +97,11 @@ export default function Home({products, totalPages, categories}: HomeProps) {
 
                 {/* FEATURE PRODUCTS */}
                 <Row>
-                  <FeatureProducts products={data?.products} />
+                  <FeatureProducts products={products} />
                 </Row>
 
                 {/* PAGINATION */}
-                <Pagination query={query} pathname='/' totalPages={totalPages} />
+                <Pagination query={query} pathname='/[page]' totalPages={totalPages} />
               </Container>
             </div>
           </div>
@@ -127,8 +111,11 @@ export default function Home({products, totalPages, categories}: HomeProps) {
   );
 }
 
-export const getStaticProps: GetStaticProps =  async (ctx) => {
-  const [categories, pagination] = await Promise.all([getCategories(), getProductsFeature()])  
+export const getStaticProps: GetStaticProps =  async ({ params }) => {
+  const page = params ? getValueAsNumber(params.page) : 1;
+  console.log('params: ', params);  
+
+  const [categories, pagination] = await Promise.all([getCategories(), getProductsFeature(page)])  
 
   return {
     props: {

@@ -4,7 +4,7 @@ import { CategoryModel } from "../model/Category";
 import { getCategoriesFn } from "../queries-fn/category.fn";
 
 import axios from 'axios';
-axios.defaults.baseURL = process.env.BASEURL;
+// axios.defaults.baseURL = process.env.BASEURL;
 axios.defaults.timeout = 1000;
 
 export type AppContextType = {
@@ -24,7 +24,17 @@ export function AppProvider({
   children: ReactNode;
 }): JSX.Element {
   const [categories, setCategories] = useState<CategoryModel[]>([]);
-  const [currentPage, setCurrentPage] = useState<number>(0)
+  const [currentPage, setCurrentPage] = useState<number>(0);
+
+  useEffect(() => {
+    getCategoriesFn()
+      .then(data => {
+        console.log('====================================');
+        console.log('data: ', JSON.stringify(data));
+        console.log('====================================');
+      })
+      .catch(err => console.log('Error: ', err));
+  }, [])
   
   const setData = (categories) => {
     setCategories(categories);

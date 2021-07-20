@@ -24,7 +24,6 @@ export default function Pagination({query, pathname, totalPages}) {
                 pathname,
                 query: { ...query, page: number + 1 },
               }}
-              shallow
             >
               <a className="page-link">{number + 1}</a>
             </Link>

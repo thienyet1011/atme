@@ -3,7 +3,7 @@ import getHandler from '../../middleware';
 import Product from '../../../../db/model/Product';
 import { getValueAsNumber } from '../../../../utils';
 
-export const getProductsFeature = async (page: number = 1) => {
+export const getProductsFeature = async (page: number = 0) => {
   const {products, totalPages} = await Product.getProductsFeature(page);
   return {products, totalPages};
 }
