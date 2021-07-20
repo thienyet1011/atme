@@ -18,41 +18,56 @@ export default getHandler()
     res.status(200).json(category);
   })
   .post(async (req, res) => {
-    const title: string = getValueAsString(req.body.title);
-    const alt: string = getValueAsString(req.body.alt);
-    const image: string = "";
-    const keywords: string = getValueAsString(req.body.keywords);
-    const description: string = getValueAsString(req.body.description);
-    const parent: number = getValueAsNumber(req.body.parent);
-    const createdBy: string = req.username;
-    const createdDate: string = moment().format('YYYY-MM-DD');
+    // const title: string = getValueAsString(req.body.title);
+    // const alt: string = getValueAsString(req.body.alt);
+    // const image: string = "";
+    // const keywords: string = getValueAsString(req.body.keywords);
+    // const description: string = getValueAsString(req.body.description);
+    // const parent: number = getValueAsNumber(req.body.parent);
+    // const createdBy: string = req.username;
+    // const createdDate: string = moment().format('YYYY-MM-DD');
 
-    const lastID = await Category.add(title, alt, image, keywords, description, parent, 
-        createdBy, createdDate);
+    // const lastID = await Category.add(title, alt, image, keywords, description, parent, 
+    //     createdBy, createdDate);
 
-    res.status(201).json({ ...req.body, id: lastID });
+    res.status(201).json({
+      payload: {
+        success: true,
+        status: 200,
+      },
+    });
   })
   .put(async (req, res) => {
-    const id: number = getValueAsNumber(req.query.id);
-    const title: string = getValueAsString(req.body.title);
-    const alt: string = getValueAsString(req.body.alt);
-    const image: string = "";
-    const keywords: string = getValueAsString(req.body.keywords);
-    const description: string = getValueAsString(req.body.description);
-    const parent: number = getValueAsNumber(req.body.parent);
-    const modifiedBy: string = req.username;
-    const modifiedDate: string = moment().format('YYYY-MM-DD');
+    // const id: number = getValueAsNumber(req.query.id);
+    // const title: string = getValueAsString(req.body.title);
+    // const alt: string = getValueAsString(req.body.alt);
+    // const image: string = "";
+    // const keywords: string = getValueAsString(req.body.keywords);
+    // const description: string = getValueAsString(req.body.description);
+    // const parent: number = getValueAsNumber(req.body.parent);
+    // const modifiedBy: string = req.username;
+    // const modifiedDate: string = moment().format('YYYY-MM-DD');
 
-    const success = await Category.update(id, title, alt, image, keywords, description, parent, 
-        modifiedBy, modifiedDate);
+    // const success = await Category.update(id, title, alt, image, keywords, description, parent, 
+    //     modifiedBy, modifiedDate);
 
-    res.status(201).json({ ...req.body, success });
+    res.status(201).json({
+      payload: {
+        success: true,
+        status: 200,
+      },
+    });
   })
   .delete(async (req, res) => {
-    const id: number = getValueAsNumber(req.query.id);
-    const modifiedBy: string = req.username;
-    const modifiedDate: string = moment().format('YYYY-MM-DD');
+    // const id: number = getValueAsNumber(req.query.id);
+    // const modifiedBy: string = req.username;
+    // const modifiedDate: string = moment().format('YYYY-MM-DD');
 
-    const success = await Category.remove(id, 9, modifiedBy, modifiedDate);
-    res.status(201).json({ success });
+    // const success = await Category.remove(id, 9, modifiedBy, modifiedDate);
+    res.status(201).json({
+      payload: {
+        success: true,
+        status: 200,
+      },
+    });
   });
