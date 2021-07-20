@@ -32,9 +32,23 @@ const MyApp = ({ Component, pageProps, categories }: MyAppProps) => {
   )
 }
 
-MyApp.getInitialProps = async (ctx) => {
-  const res = await axios.get('/api/categories');
-  const categories = res.data;
+MyApp.getInitialProps = async ({req}) => {
+  let url = req && req.headers && req.headers.host ? 'http://' + req.headers.host : window.location.origin
+  var categories = [];
+
+  try{
+    //get Stickers
+    const response = await axios.get(url + '/api/categories', {
+      withCredentials: true,
+    });
+
+    if(response && response.data && typeof response.data !== 'undefined'){
+      categories = response.data
+    }
+  } catch(error){
+    console.error(error)
+  }
+
   return { categories };
 }
 
