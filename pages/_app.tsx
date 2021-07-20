@@ -33,7 +33,7 @@ const MyApp = ({ Component, pageProps, categories }: MyAppProps) => {
 }
 
 MyApp.getInitialProps = async (ctx) => {
-  const res = await axios.get('api/categories');
+  const res = await axios.get('/api/categories');
   const categories = res.data;
   return { categories };
 }
