@@ -1,9 +1,32 @@
 import nextConnect from 'next-connect';
+import Cors, { CorsOptions } from 'cors';
 
 import { NextApiRequest, NextApiResponse } from 'next';
 import { verify } from 'jsonwebtoken';
 
 import {secretKey} from './keys';
+
+const corsOptions: CorsOptions = {
+  origin: "*",
+  allowedHeaders: ['Context-Type', 'Authorization'],
+  methods: ['GET', 'DELTE', 'POST', 'PUT'],
+}
+
+const cors = Cors(corsOptions);
+
+// Helper method to wait for a middleware to execute before continuing
+// And to throw an error when an error happens in a middleware
+function enableCors(req, res, fn) {
+  return new Promise((resolve, reject) => {
+    fn(req, res, (result) => {
+      if (result instanceof Error) {
+        return reject(result)
+      }
+
+      return resolve(result)
+    })
+  })
+}
 
 export interface NextApiRequestExtended extends NextApiRequest {
   _id: number | null;
@@ -18,7 +41,13 @@ export default function getHandler() {
   onNoMatch(req, res) {
     res.status(405).json({ error: `Method ${req.method} Not Allowed` });
   },
-}).use((req, res, next) => {
+})
+.use(async (req, res, next) => {
+  // Run the middleware
+  await enableCors(req, res, cors);
+  next();
+})
+.use((req, res, next) => {
   req._id = null;
   req.username = null;
 
