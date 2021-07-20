@@ -10,6 +10,9 @@ import { useQuery, useQueryClient } from 'react-query';
 
 import { useAppContext } from '../context';
 
+import { CategoryModel } from '../model/Category';
+import { getCategories } from './api/categories';
+
 import { ProductModel } from '../model/Product';
 import { getProductsFeature } from './api/products/feature';
 
@@ -26,22 +29,24 @@ import { getProductsFeatureFn } from '../queries-fn/product.fn';
 import { GET_FEATURE_PRODUCTS } from '../queries-fn/keys';
 
 export interface HomeProps {
+  categories: CategoryModel[];
   products: ProductModel[];
   totalPages: number;
 }
 
-export default function Home({products, totalPages}: HomeProps) {
+export default function Home({products, totalPages, categories}: HomeProps) {
   const queryClient = useQueryClient();
   const router = useRouter();
 
-  const { categories, setPage } = useAppContext();  
+  const { setData, setPage } = useAppContext();  
 
   const {query} = router;
   const [serverQuery] = useState(query);
 
   useEffect(() => {
+    setData(categories);
     setPage(0);
-  }, [setPage])
+  }, [setData, setPage])
 
   // Fetch fb from API
   const { isLoading, data } = useQuery([GET_FEATURE_PRODUCTS, query], 
@@ -123,13 +128,14 @@ export default function Home({products, totalPages}: HomeProps) {
 }
 
 export const getStaticProps: GetStaticProps =  async (ctx) => {
-  const [pagintion] = await Promise.all([getProductsFeature()])  
+  const [categories, pagination] = await Promise.all([getCategories(), getProductsFeature()])  
 
   return {
     props: {
-      products: pagintion.products,
-      totalPages: pagintion.totalPages,
+      categories,
+      products: pagination.products,
+      totalPages: pagination.totalPages,
     },
-    revalidate: 10,
+    revalidate: 20,
   };
 };

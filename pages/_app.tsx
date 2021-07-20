@@ -8,9 +8,9 @@ import "../styles/css/slick/slick.css";
 import "../styles/css/slick/slick-theme.css";
 
 import { AppProps } from 'next/app';
-import {QueryClient, QueryClientProvider} from 'react-query';
+import { QueryClient, QueryClientProvider } from 'react-query';
 
-import {AppProvider} from '../context';
+import { AppProvider } from '../context';
 
 const queryClient = new QueryClient();
 

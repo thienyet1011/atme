@@ -15,30 +15,14 @@ export const getCategories = async () => {
   return categories;
 }
 
-export default async function handler(req, res) {
-  switch(req.method) {
-    case "GET":
-      const categories = await getCategories();
-      return res.status(200).json({
-        payload: {
-          success: true,
-          status: 200,
-          categories, 
-        },
-      });
-    default:
-      return res.status(405).json({ error: `Method ${req.method} Not Allowed` });
-  }
-}
-
-// export default getHandler()
-//   .get(async (req, res) => {
-//     const categories = await getCategories();
-//     res.status(200).json({
-//       payload: {
-//         success: true,
-//         status: 200,
-//         categories, 
-//       },
-//     });
-//   })
+export default getHandler()
+  .get(async (req, res) => {
+    const categories = await getCategories();
+    res.status(200).json({
+      payload: {
+        success: true,
+        status: 200,
+        categories, 
+      },
+    });
+  })
