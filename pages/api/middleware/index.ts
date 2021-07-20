@@ -44,8 +44,19 @@ export default function getHandler() {
 })
 .use(async (req, res, next) => {
   // Run the middleware
-  await enableCors(req, res, cors);
-  next();
+  try {
+    const result = await enableCors(req, res, cors);
+    next();
+  }
+  catch(err) {
+    return  res.status(200).json({
+      payload: {
+        success: true,
+        status: 200,
+        error: `Sorry something wrong! ${err.message}`
+      },
+    });
+  }
 })
 .use((req, res, next) => {
   req._id = null;
