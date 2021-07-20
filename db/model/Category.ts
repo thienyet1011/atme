@@ -24,6 +24,7 @@ async function getCategories() {
 
     categories = <CategoryModel[]>JSON.parse(JSON.stringify(results));
     connection.end();
+    connection.destroy();
   } catch (err) {
     console.log("Error: ", err.message);
   }
@@ -53,6 +54,7 @@ async function getSubCategories(parent?: number) {
 
     categories = <CategoryModel[]>JSON.parse(JSON.stringify(results));
     connection.end();
+    connection.destroy();
   } catch (err) {
     console.log("Error: ", err.message);
   }
@@ -82,6 +84,7 @@ async function getCategoryById(id: number) {
 
     category = results.length > 0 ? <CategoryModel>JSON.parse(JSON.stringify(results[0])) : null;
     connection.end();
+    connection.destroy();
   } catch (err) {
     console.log("Error: ", err.message);
   }

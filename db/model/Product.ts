@@ -50,6 +50,7 @@ async function getProducts(page: number = 1) {
     const totalRows = <{Count: number}>JSON.parse(JSON.stringify(results));
     totalPages = Math.ceil(totalRows.Count / rowsPerPage);
     connection.end();
+    connection.destroy();
   } catch (err) {
     console.log("Error: ", err.message);
   }
@@ -105,6 +106,7 @@ async function getProductsFeature(page: number = 1) {
     const totalRows = <{Count: number}>JSON.parse(JSON.stringify(results[0]));
     totalPages = Math.ceil(totalRows.Count / rowsPerPage);
     connection.end();
+    connection.destroy();
   } catch (err) {
     console.log("Error: ", err.message);
   }
@@ -139,6 +141,7 @@ async function getProductsByCategoryId(categoryId: number) {
 
     products = <ProductModel[]>JSON.parse(JSON.stringify(results));
     connection.end();
+    connection.destroy();
   } catch (err) {
     console.log("Error: ", err.message);
   }
@@ -197,6 +200,7 @@ async function getProductsPageByCategoryId(
     const totalRows = <{Count: number}>JSON.parse(JSON.stringify(results[0]));
     totalPages = Math.ceil(totalRows.Count / rowsPerPage);
     connection.end();
+    connection.destroy();
   } catch (err) {
     console.log("Error: ", err.message);
   }
@@ -235,6 +239,7 @@ async function getSimilarProductsByCategoryId(
 
     products = <ProductModel[]>JSON.parse(JSON.stringify(results));
     connection.end();
+    connection.destroy();
   } catch (err) {
     console.log("Error: ", err.message);
   }
@@ -269,6 +274,7 @@ async function getSubProducts(categoryId: number, parent: number) {
 
     products = <ProductModel[]>JSON.parse(JSON.stringify(results));
     connection.end();
+    connection.destroy();
   } catch (err) {
     console.log("Error: ", err.message);
   }
@@ -303,6 +309,7 @@ async function getProductById(id: number) {
 
     product = results.length > 0 ? <ProductModel>JSON.parse(JSON.stringify(results[0])) : null;
     connection.end();
+    connection.destroy();
   } catch (err) {
     console.log("Error: ", err.message);
   }
