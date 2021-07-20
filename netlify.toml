@@ -1,7 +1,9 @@
 [build]
   command = "npm run build"
-  functions = "out_functions"
-  publish   = "out_publish"
+  publish   = "out"
+
+[[plugins]]
+  package = "@netlify/plugin-nextjs"
 
 [[headers]]
   for = "/*"
@@ -9,3 +11,7 @@
     Access-Control-Allow-Origin = "*"
     Access-Control-Allow-Methods = "GET, POST, PUT, DELETE"
     Access-Control-Allow-Headers = "Content-Type, Authorization"
+
+[context.production.environment]
+NEXT_SERVERLESS = "true"
+NODE_ENV = "production"
