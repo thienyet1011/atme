@@ -25,16 +25,6 @@ export function AppProvider({
 }): JSX.Element {
   const [categories, setCategories] = useState<CategoryModel[]>([]);
   const [currentPage, setCurrentPage] = useState<number>(0);
-
-  useEffect(() => {
-    getCategoriesFn()
-      .then(data => {
-        console.log('====================================');
-        console.log('data: ', JSON.stringify(data));
-        console.log('====================================');
-      })
-      .catch(err => console.log('Error: ', err));
-  }, [])
   
   const setData = (categories) => {
     setCategories(categories);

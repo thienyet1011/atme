@@ -11,10 +11,17 @@ import { AppProps } from 'next/app';
 import { QueryClient, QueryClientProvider } from 'react-query';
 
 import { AppProvider } from '../context';
+import { CategoryModel } from 'model/Category';
 
 const queryClient = new QueryClient();
 
-const MyApp = ({ Component, pageProps }: AppProps) => {
+interface MyAppProps extends AppProps {
+  categories: CategoryModel[];
+}
+
+const MyApp = ({ Component, pageProps, categories }: MyAppProps) => {
+  console.log('categories: ', JSON.stringify(categories));  
+
   return (
     <AppProvider>
       <QueryClientProvider client={queryClient}>
@@ -22,6 +29,12 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
       </QueryClientProvider>
     </AppProvider>
   )
+}
+
+MyApp.getInitialProps = async (ctx) => {
+  const res = await fetch('api/categories');
+  const categories = await res.json();
+  return { categories };
 }
 
 export default MyApp;
