@@ -4,13 +4,12 @@ import { CategoryModel } from "../model/Category";
 import { getCategoriesFn } from "../queries-fn/category.fn";
 
 import axios from 'axios';
-// axios.defaults.baseURL = process.env.BASEURL;
+axios.defaults.baseURL = process.env.BASEURL;
 axios.defaults.timeout = 1000;
 
 export type AppContextType = {
   categories: CategoryModel[];
   currentPage: number;
-  setData: (categories: CategoryModel[]) => void;
   setPage: (page: number) => void;
 };
 
@@ -25,10 +24,15 @@ export function AppProvider({
 }): JSX.Element {
   const [categories, setCategories] = useState<CategoryModel[]>([]);
   const [currentPage, setCurrentPage] = useState<number>(0);
-  
-  const setData = (categories) => {
-    setCategories(categories);
-  }
+
+  useEffect(() => {
+    getCategoriesFn()
+      .then((payload) => {
+          const { categories } = payload;
+          setCategories(categories);
+      })
+      .catch((err) => console.log("Error: ", err.message));
+  }, []);
 
   const setPage = (page: number) => {
     setCurrentPage(page);
@@ -47,7 +51,6 @@ export function AppProvider({
     () => ({
       categories,
       currentPage,
-      setData,
       setPage,
     }),
     [categories, currentPage]

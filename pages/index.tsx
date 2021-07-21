@@ -34,16 +34,16 @@ export interface HomeProps {
   totalPages: number;
 }
 
-export default function Home({products, totalPages, categories}: HomeProps) {
+export default function Home({products, totalPages}: HomeProps) {
   const router = useRouter();
 
   const {query} = router;
-  const {setData, setPage} = useAppContext();  
+  const {categories, setPage} = useAppContext();  
 
-  useEffect(() => {
-    setData(categories);
-    setPage(0);
-  }, [setData, setPage]);
+  // useEffect(() => {
+  //   setData(categories);
+  //   setPage(0);
+  // }, [setData, setPage]);
 
   return (
     <React.Fragment>
@@ -117,13 +117,13 @@ export const getStaticProps: GetStaticProps =  async ({ params }) => {
 
   const [categories, pagination] = await Promise.all([getCategories(), getProductsFeature(page)]);
 
-  const getData = async () => {
-    const res = await fetch(`https://objective-chandrasekhar-589973.netlify.app/api/categories`)
-    const data = await res.json()
-    console.log('====================================');
-    console.log('DEPLOY_URL1: ', data);
-    console.log('====================================');
-  }
+  // const getData = async () => {
+  //   const res = await fetch(`https://objective-chandrasekhar-589973.netlify.app/api/categories`)
+  //   const data = await res.json()
+  //   console.log('====================================');
+  //   console.log('DEPLOY_URL1: ', data);
+  //   console.log('====================================');
+  // }
 
   return {
     props: {

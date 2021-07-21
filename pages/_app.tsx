@@ -15,13 +15,7 @@ import { CategoryModel } from 'model/Category';
 
 const queryClient = new QueryClient();
 
-interface MyAppProps extends AppProps {
-  categories: CategoryModel[];
-}
-
-const MyApp = ({ Component, pageProps, categories }: MyAppProps) => {
-  console.log('categories: ', JSON.stringify(categories));  
-
+const MyApp = ({ Component, pageProps }: AppProps) => {
   return (
     <AppProvider>
       <QueryClientProvider client={queryClient}>
