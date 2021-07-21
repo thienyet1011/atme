@@ -15,7 +15,6 @@ import { CategoryModel } from 'model/Category';
 
 import axios from 'axios';
 axios.defaults.baseURL = process.env.BASEURL;
-axios.defaults.timeout = 1000;
 
 const queryClient = new QueryClient();
 
