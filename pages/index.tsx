@@ -43,12 +43,17 @@ export default function Home({products, totalPages}: HomeProps) {
   const {categories, setPage} = useAppContext();  
 
   const getData = async () => {
-    // const res = await fetch(`https://objective-chandrasekhar-589973.netlify.app/api/categories`)
-    // const data = await res.json()
+    const res = await fetch(`https://objective-chandrasekhar-589973.netlify.app/api/categories`)
+    const data1 = await res.json()
+
+    const response = await axios.get(`https://objective-chandrasekhar-589973.netlify.app/api/categories`);
+    const data2 = response.data;
+
     console.log('====================================');
     console.log('axios.defaultBaseUrl: ', axios.defaults.baseURL);
     console.log('process.env.BASEURL: ', process.env.BASEURL);
-    // console.log('DEPLOY_URL1: ', data);
+    console.log('DEPLOY_URL1: ', data1);
+    console.log('DEPLOY_URL2: ', data2);
     console.log('====================================');
   }
 
