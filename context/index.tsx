@@ -3,10 +3,6 @@ import React, { ReactNode, useContext, useEffect, useMemo, useState } from "reac
 import { CategoryModel } from "../model/Category";
 import { getCategoriesFn } from "../queries-fn/category.fn";
 
-import axios from 'axios';
-axios.defaults.baseURL = process.env.BASEURL;
-axios.defaults.timeout = 1000;
-
 export type AppContextType = {
   categories: CategoryModel[];
   currentPage: number;
