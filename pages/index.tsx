@@ -28,6 +28,8 @@ import FeatureProducts from '../components/products/FeatureProducts';
 import { getProductsFeatureFn } from '../queries-fn/product.fn';
 import { GET_FEATURE_PRODUCTS } from '../queries-fn/keys';
 
+import axios from 'axios';
+
 export interface HomeProps {
   categories: CategoryModel[];
   products: ProductModel[];
@@ -40,10 +42,18 @@ export default function Home({products, totalPages}: HomeProps) {
   const {query} = router;
   const {categories, setPage} = useAppContext();  
 
-  // useEffect(() => {
-  //   setData(categories);
-  //   setPage(0);
-  // }, [setData, setPage]);
+  const getData = async () => {
+    const res = await fetch(`https://objective-chandrasekhar-589973.netlify.app/api/categories`)
+    const data = await res.json()
+    console.log('====================================');
+    console.log('axios.defaultBaseUrl: ', axios.defaults.baseURL);
+    console.log('DEPLOY_URL1: ', data);
+    console.log('====================================');
+  }
+
+  useEffect(() => {
+    getData();
+  }, [])
 
   return (
     <React.Fragment>
