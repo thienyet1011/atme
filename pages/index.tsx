@@ -47,6 +47,7 @@ export default function Home({products, totalPages}: HomeProps) {
     const data = await res.json()
     console.log('====================================');
     console.log('axios.defaultBaseUrl: ', axios.defaults.baseURL);
+    console.log('process.env.BASEURL: ', process.env.BASEURL);
     console.log('DEPLOY_URL1: ', data);
     console.log('====================================');
   }
