@@ -1,4 +1,4 @@
-import '../styles/Global.css';
+import '../styles/global.css';
 import '../styles/css/lala-slider/doc.min.css'
 import '../styles/css/lala-slider/font.min.css'
 import '../styles/css/font-awesome.css'

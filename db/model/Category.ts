@@ -23,6 +23,7 @@ async function getCategories() {
     );
 
     categories = <CategoryModel[]>JSON.parse(JSON.stringify(results));
+
     connection.end();
     connection.destroy();
   } catch (err) {
@@ -53,6 +54,7 @@ async function getSubCategories(parent?: number) {
     );
 
     categories = <CategoryModel[]>JSON.parse(JSON.stringify(results));
+    
     connection.end();
     connection.destroy();
   } catch (err) {

@@ -1,12 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
+import Link from 'next/link';
 
 import { GetStaticProps } from 'next';
-import { Container, Row, Col, Spinner } from 'react-bootstrap';
-
-import deepEqual from "fast-deep-equal";
+import { Container, Row, Col, Spinner, Button } from 'react-bootstrap';
 
 import { useRouter } from "next/router";
-import { useQuery, useQueryClient } from 'react-query';
 
 import { useAppContext } from '../context';
 
@@ -16,7 +14,7 @@ import { getCategories } from './api/categories';
 import { ProductModel } from '../model/Product';
 import { getProductsFeature } from './api/products/feature';
 
-import { getValueAsNumber, onCompleted } from '../utils';
+import { getValueAsNumber } from '../utils';
 
 import Layout from '../components/layout';
 import Pagination from '../components/Pagination';
@@ -24,11 +22,6 @@ import Pagination from '../components/Pagination';
 import CategoriesSlider from '../components/categories/CategoriesSlider';
 import ProductsCarousel from '../components/products/ProductsCarousel';
 import FeatureProducts from '../components/products/FeatureProducts';
-
-import { getProductsFeatureFn } from '../queries-fn/product.fn';
-import { GET_FEATURE_PRODUCTS } from '../queries-fn/keys';
-
-import axios from 'axios';
 
 export interface HomeProps {
   categories: CategoryModel[];
@@ -42,23 +35,8 @@ export default function Home({products, totalPages}: HomeProps) {
   const {query} = router;
   const {categories, setPage} = useAppContext();  
 
-  const getData = async () => {
-    const res = await fetch(`https://objective-chandrasekhar-589973.netlify.app/api/categories`)
-    const data1 = await res.json()
-
-    // const response = await axios.get(`https://objective-chandrasekhar-589973.netlify.app/api/categories`);
-    // const data2 = await response.data;
-
-    console.log('====================================');
-    console.log('axios.defaultBaseUrl: ', axios.defaults.baseURL);
-    console.log('process.env.BASEURL: ', process.env.BASEURL);
-    console.log('DEPLOY_URL1: ', data1);
-    // console.log('DEPLOY_URL2: ', data2);
-    console.log('====================================');
-  }
-
   useEffect(() => {
-    getData();
+    setPage(0);
   }, [])
 
   return (
@@ -86,7 +64,7 @@ export default function Home({products, totalPages}: HomeProps) {
               </Container>
             </div>
 
-            <div className="productPriority-list">
+            <div className="product-priority-list">
               <Container>
                 <h2 className="uppercase">ATME VIỆT NAM</h2>
 
@@ -116,8 +94,19 @@ export default function Home({products, totalPages}: HomeProps) {
                   <FeatureProducts products={products} />
                 </Row>
 
-                {/* PAGINATION */}
-                <Pagination query={query} pathname='/[page]' totalPages={totalPages} />
+                {/* FEATURE PRODUCTS FOOTER */}
+                <Row className="product-priority-list-footer">
+                  <Col sm={12} md={{span: 4, offset: 4}}>
+                    <Link
+                      href={{
+                        pathname: "/products",
+                        query: { ...query, page: 1 },
+                      }}
+                    >
+                      <Button type="button" variant="light">Xem thêm</Button>
+                    </Link>
+                  </Col>
+                </Row>
               </Container>
             </div>
           </div>

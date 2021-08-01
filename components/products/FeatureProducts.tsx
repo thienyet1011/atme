@@ -19,14 +19,14 @@ export default function FeatureProducts({products}: FeatureProductsProps) {
       {products &&
         products.map((product: ProductModel) => {
           return (
-            <Col key={product.id} sm={12} md={3} lg={4}>
+            <Col key={product.id} sm={12} md={6} lg={4}>
               <Link
                 href="/products/[category_alt]/[product_alt]"
                 as={`/products/${product.categoryAlt}-${product.categoryId}/${product.alt}-${product.id}`}
               >
                 <a title={product.title}>
-                  <div className="productPriority">
-                    <div className="productPriority-img">
+                  <div className="product-priority">
+                    <div className="product-priority-img">
                       <Image
                         src={prefix + product.image}
                         alt={product.alt}
@@ -36,9 +36,9 @@ export default function FeatureProducts({products}: FeatureProductsProps) {
                       />
                     </div>
 
-                    <p className="productPriority-name">{product.title.toUpperCase()}</p>
+                    <p className="product-priority-name">{product.title.toUpperCase()}</p>
 
-                    <div className="productPriority-cost">
+                    <div className="product-priority-cost">
                       {product.showPrice ? (
                         <div>
                           Giá tham khảo:{" "}

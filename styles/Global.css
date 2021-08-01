@@ -249,7 +249,7 @@ input.form-control, select.form-control {
 }
 /*#endregion */
 
-/*#region slick-box */
+/*#region Slick-box */
 .slick-box .slick-prev,
 .slick-box .slick-next {
     position: absolute;
@@ -292,7 +292,7 @@ input.form-control, select.form-control {
 }
 /*#endregion */
 
-/*#region Lên đầu trang */
+/*#region Go to top */
 #go_top {
     position: fixed;
     bottom: 40px;
@@ -313,7 +313,7 @@ input.form-control, select.form-control {
 }
 /*#endregion */
 
-/*#region header */
+/*#region Header */
 .header-top.top-layout-02 {
     color: #fff;
     background: #000;
@@ -377,7 +377,7 @@ input.form-control, select.form-control {
 }
 /*#endregion */
 
-/*#region box slide category*/
+/*#region Box Category carousel*/
 .fieldgroupbox {
     clear: both;
     height: 36px;
@@ -534,9 +534,27 @@ input.form-control, select.form-control {
 .color-name-category {
     background-color: #0099CC;
 }
+
+.carousel-item > div {
+    background-color: rgba(0, 0, 0, 0.3);
+}
+
+.carousel-item img {
+    border-radius: 8px;
+    object-fit: contain;
+}
+
+.carousel .carousel-item .carousel-caption {
+    background-color: transparent !important;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    top: 0;
+}
 /*#endregion*/
 
-/*#region home news */
+/*#region Home News */
 .homenews {
     clear: both;
     height: 390px;
@@ -678,7 +696,7 @@ input.form-control, select.form-control {
 }
 /*#endregion*/
 
-/*#region home page link*/
+/*#region Home Page*/
 .page-link {
     clear: both;
     width: 100%;
@@ -733,14 +751,14 @@ input.form-control, select.form-control {
 }
 /*#endregion*/
 
-/*#region slide các công ty thành viên*/
+/*#region Member Corporation carousel*/
 .box-magazine {
     background: #f5f5f5;
     padding: 30px 0;
 }
 /*#endregion*/
 
-/*#region page */
+/*#region Page */
 .box-slider {
     position: relative;
     height: 755px;
@@ -2156,13 +2174,13 @@ hr {
     text-transform: uppercase;
 }
 
-.productPriority-list {
+.product-priority-list {
     background-color: #fec52d;
     padding-top: 30px;
     padding-bottom: 30px;
 }
 
-.productPriority-list h2 {
+.product-priority-list h2 {
     position: relative;
     background: url(./images/label.png) top center no-repeat;
     text-align: center;
@@ -2171,14 +2189,14 @@ hr {
     color: #fff;
 }
 
-.productPriority-list p {
+.product-priority-list p {
     font: 700 22px/28px 'Times New Roman';
     color: #252525;
     text-align: center;
     margin-top: 22px;
 }
 
-.productPriority-list .productPriority {
+.product-priority-list .product-priority {
     width: 100%;
     position: relative;
     float: left;
@@ -2190,7 +2208,7 @@ hr {
     padding-bottom: 20px;
 }
 
-.productPriority-list .productPriority p {
+.product-priority-list .product-priority p {
     font: 700 16px/22px 'Times New Roman';
     color: #252525;
     margin-top: 0px !important;
@@ -2201,19 +2219,18 @@ hr {
     white-space: nowrap;
 }
 
-.productPriority-list .productPriority p:hover {
+.product-priority-list .product-priority p:hover {
     color: #ffc107;
 }
 
-
-.productPriority .productPriority-cost .price {
+.product-priority .product-priority-cost .price {
     color: #ff214b;
     font-weight: normal;
     font-size: 24px;
     line-height: 24px;
 }
 
-.productPriority-img {
+.product-priority-img {
     height: 250px !important;
     width: 100%;
     vertical-align: middle;
@@ -2221,7 +2238,7 @@ hr {
     overflow: hidden;
 }
 
-.productPriority-img img {
+.product-priority-img img {
     display: block;
     max-width: 100%;
     width: auto;
@@ -2235,10 +2252,14 @@ hr {
     transition: all 0.4s ease;
 }
 
-.productPriority-img img:hover {
+.product-priority-img img:hover {
     -ms-transform: scale(1.2);
     -webkit-transform: scale(1.2);
     transform: scale(1.2);
+}
+
+.product-priority-list-footer button {
+    width: 100%;
 }
 
 .notFound-content a {
@@ -3288,11 +3309,11 @@ a {
         height: 280px
     }
 
-    .productPriority-img {
+    .product-priority-img {
         height: 180px !important;
     }
 
-    .productPriority-list h2 {
+    .product-priority-list h2 {
         width: 100% !important;
     }
 
@@ -3375,7 +3396,7 @@ a {
         line-height: 24px;
     }
 
-    .productPriority-list .productPriority {
+    .product-priority-list .product-priority {
         width: 320px !important;
     }
 
@@ -3764,10 +3785,6 @@ body #contact-us .form-col {
     display: none !important;
 }
 
-.carousel-item {
-    height: 390px;
-}
-
 div.feature-products ul {
     margin-bottom: 0px !important;
     padding-bottom: 40px;
@@ -4055,8 +4072,8 @@ ul.pagination {
 .page-item.active .page-link {
     z-index: 3;
     color: #fff !important;
-    background-color: rgba(0, 0, 0, 0.5) !important;
-    border-color: rgba(0, 0, 0, 0.3) !important;
+    background-color: rgba(249, 166, 25, 0.8) !important;
+    border-color: rgba(249, 166, 25, 1) !important;
 }
 
 .loading-overlay {
@@ -4078,3 +4095,4 @@ ul.pagination {
 .product-description p {
     line-height: 24px !important;
 }
+/*#endregion */

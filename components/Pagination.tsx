@@ -24,6 +24,7 @@ export default function Pagination({query, pathname, totalPages}) {
                 pathname,
                 query: { ...query, page: number + 1 },
               }}
+              scroll={false}
             >
               <a className="page-link">{number + 1}</a>
             </Link>

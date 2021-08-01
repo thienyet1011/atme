@@ -11,13 +11,13 @@ export default function MainNav({children}: MainNavProps) {
     <Nav aria-label="breadcrumb" className="mt-20">
       <ol className="breadcrumb">
         <li className="breadcrumb-item">
-          <Link href="/">
+          <Link href="/" scroll={false}>
             <a title="Trang chủ">Trang chủ</a>
           </Link>
         </li>
 
         <li className="breadcrumb-item">
-          <Link href="/products">
+          <Link href="/products" scroll={false}>
             <a title="Sản phẩm">SẢN PHẨM</a>
           </Link>
         </li>
