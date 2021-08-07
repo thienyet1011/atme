@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 import {
   Container,
   Form,
@@ -9,19 +8,11 @@ import {
   Col,
 } from "react-bootstrap";
 
-import { useAppContext } from '../context';
-
 import Layout from "../components/layout";
 
 export default function Contact() {
-  const { categories, setPage } = useAppContext();
-
-  useEffect(() => {
-    setPage(4);
-  }, [setPage])
-
   return (
-    <Layout categories={categories}>
+    <Layout>
       <Container fluid className="main-content">
         <Row>
           <Col

@@ -10,8 +10,6 @@ import deepEqual from "fast-deep-equal";
 import { useRouter } from "next/router";
 import { useQuery, useQueryClient } from "react-query";
 
-import { useAppContext } from '../../../context';
-
 import { CategoryModel } from "../../../model/Category";
 import { getCategories } from "../../api/categories";
 import { getCategoryById } from "../../api/categories/[category_id]";
@@ -22,8 +20,8 @@ import { getProductsPageByCategory } from "../../api/categories/[category_id]/pr
 import { getValueAsString, onCompleted } from "../../../utils";
 
 import Layout from "../../../components/layout";
-import MainNav from "../../../components/MainNav";
-import RightMenu from "../../../components/RightMenu";
+import MainNav from "../../../components/common/MainNav";
+import RightMenu from "../../../components/common/RightMenu";
 import ProductsContainer from "../../../components/categories/ProductsContainer";
 
 import { getProductsByCategoryFn } from "../../../queries-fn/product.fn";
@@ -43,14 +41,8 @@ export default function CategoryPage({
   const queryClient = useQueryClient();
   const router = useRouter();
 
-  const { categories, setPage } = useAppContext();  
-
   const { query, pathname } = router;
-  const [serverQuery, setServerQuery] = useState(query);  
-
-  useEffect(() => {
-    setPage(1);
-  }, [setPage])
+  const [serverQuery, setServerQuery] = useState(query);
 
   // Fetch fb from API
   const { isLoading, data } = useQuery(
@@ -81,7 +73,7 @@ export default function CategoryPage({
         <Spinner className="spinner-md" animation="border" variant="warning" />
       </div>
 
-      <Layout categories={categories}>
+      <Layout>
         <div id="Render-Body">
           <div className="container">
             <MainNav>
@@ -108,7 +100,6 @@ export default function CategoryPage({
               <Col md={3}>
                 {category && (<RightMenu
                   currentCategory={category.id}
-                  categories={categories}
                 />)}
               </Col>
             </Row>

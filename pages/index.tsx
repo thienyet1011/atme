@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import Link from 'next/link';
 
 import { GetStaticProps } from 'next';
@@ -17,7 +17,6 @@ import { getProductsFeature } from './api/products/feature';
 import { getValueAsNumber } from '../utils';
 
 import Layout from '../components/layout';
-import Pagination from '../components/Pagination';
 
 import CategoriesSlider from '../components/categories/CategoriesSlider';
 import ProductsCarousel from '../components/products/ProductsCarousel';
@@ -33,11 +32,7 @@ export default function Home({products, totalPages}: HomeProps) {
   const router = useRouter();
 
   const {query} = router;
-  const {categories, setPage} = useAppContext();  
-
-  useEffect(() => {
-    setPage(0);
-  }, [])
+  const {categories} = useAppContext();
 
   return (
     <React.Fragment>
@@ -45,7 +40,7 @@ export default function Home({products, totalPages}: HomeProps) {
         <Spinner className="spinner-md" animation="border" variant="warning" />
       </div>
 
-      <Layout categories={categories}>
+      <Layout>
         <div id="Render-Body">
           <div className="main-content">
             <div className="bg-overlay-gray-darkest-1">
@@ -103,7 +98,7 @@ export default function Home({products, totalPages}: HomeProps) {
                         query: { ...query, page: 1 },
                       }}
                     >
-                      <Button type="button" variant="light">Xem thêm</Button>
+                      {totalPages > 0 && <Button type="button" variant="light">Xem thêm</Button>}
                     </Link>
                   </Col>
                 </Row>
@@ -121,14 +116,6 @@ export const getStaticProps: GetStaticProps =  async ({ params }) => {
   console.log('params: ', params);  
 
   const [categories, pagination] = await Promise.all([getCategories(), getProductsFeature(page)]);
-
-  // const getData = async () => {
-  //   const res = await fetch(`https://objective-chandrasekhar-589973.netlify.app/api/categories`)
-  //   const data = await res.json()
-  //   console.log('====================================');
-  //   console.log('DEPLOY_URL1: ', data);
-  //   console.log('====================================');
-  // }
 
   return {
     props: {

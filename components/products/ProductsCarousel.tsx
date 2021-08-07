@@ -1,9 +1,9 @@
 import React from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { Carousel, Container, Row, Col } from "react-bootstrap";
+import { Carousel, Row, Col } from "react-bootstrap";
 
-import Carousels from "../Carousels";
+import Carousels from "../common/Carousels";
 
 const prefix = process.env.NEXT_PUBLIC_BASE_PATH || '';
 

@@ -1,27 +1,21 @@
 import React, { ReactNode } from "react";
 import Script from "next/script";
-import { Container, Row, Col, Navbar, Nav, NavDropdown } from "react-bootstrap";
-
-import { useAppContext } from "../../context";
 
 import Head from "next/head";
-import Image from "next/image";
-import Link from "next/link";
 
-import { CategoryModel } from "../../model/Category";
+import Header from "./Header";
+import Main from "./Main";
+import Menu from "./Menu"
 
 interface LayoutProps {
   children?: ReactNode;
   title?: string;
   description?: string;
-  categories?: CategoryModel[];
 }
 
 const prefix = process.env.NEXT_PUBLIC_BASE_PATH || '';
 
-const Layout = ({ children, title, description, categories }: LayoutProps) => {
-  const { currentPage } = useAppContext();
-
+const Layout = ({ children, title, description }: LayoutProps) => {
   return (
     <React.Fragment>
       <Head>
@@ -38,197 +32,16 @@ const Layout = ({ children, title, description, categories }: LayoutProps) => {
         <div className="headerPart">
           {/* Top menu */}
           <div className="header-top top-layout-02">
-            <Container>
-              <Row>
-                <Col sm={12} md={6}>
-                  <div className="topbar-left">
-                    <div className="topbar-content">
-                      <div className="item">
-                        <div className="wg-contact">
-                          <i className="fa fa-map-marker" />{" "}
-                          <span>Nha Trang, Khánh Hòa</span>
-                        </div>
-                      </div>
-
-                      <div className="item">
-                        <div className="wg-contact">
-                          <i className="fa fa-phone" />{" "}
-                          <span>0983 383 283</span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </Col>
-
-                <Col sm={12} md={6} className="d-none d-sm-block">
-                  <div className="topbar-right">
-                    <div className="topbar-content">
-                      <div className="item icon-social ">
-                        <a
-                          href="https://www.facebook.com/thu.vo.lhu"
-                          className="fa fa-facebook"
-                        ></a>
-
-                        <a
-                          href="https://twitter.com/amte.vn"
-                          className="fa fa-twitter"
-                        ></a>
-
-                        <a
-                          href="mailto:thu.vo.lhu@gmail.com"
-                          className="fa fa-google"
-                        ></a>
-                      </div>
-                    </div>
-                  </div>
-                </Col>
-              </Row>
-            </Container>
+            <Header/>
           </div>
 
           {/* Main menu */}
           <div className="header-main-container">
-            <Container>
-              <Row>
-                <Col md={12} lg={8} xl={9} className="logo-site">
-                  <div className="logo-main">
-                    <Link href="/">
-                      <a>
-                        <Image
-                          src={prefix + '/logo.png'}
-                          alt="Logo"
-                          width="2364"
-                          height="710"
-                          layout="responsive"
-                        />
-                      </a>
-                    </Link>
-                  </div>
-
-                  <h3 className="intro-header">
-                    <p>
-                      ATME Việt Nam - Chuyên phân phối thiết bị trên toán quốc
-                    </p>
-                  </h3>
-                </Col>
-
-                <Col md={12} lg={4} xl={3} className="addressBar">
-                  <ul>
-                    <li className="mb-10">
-                      <a href="mailto:thu.vo.lhu@gmail.com" rel="nofollow">
-                        <div>
-                          <Image
-                            src={prefix + '/images/liIco3.png'}
-                            alt="email"
-                            width="36"
-                            height="36"
-                            layout="fixed"
-                          />
-                          <span>thu.vo.lhu@gmail.com</span>
-                        </div>
-                      </a>
-                    </li>
-
-                    <li>
-                      <a href="tel:0983 383 283">
-                        <div>
-                          <Image
-                            src={prefix + '/images/liIco2.png'}
-                            alt="mobile"
-                            width="36"
-                            height="36"
-                            layout="fixed"
-                          />
-                          <span>0983 383 283</span>
-                        </div>
-                      </a>
-                    </li>
-                  </ul>
-                </Col>
-              </Row>
-            </Container>
+            <Main/>
           </div>
 
           {/* Main navigator  */}
-          <Navbar expand="lg" className="nav">
-            <Container>
-              <Navbar.Toggle aria-controls="basic-navbar-nav" />
-              <Navbar.Collapse id="basic-navbar-nav">
-                <Nav className="me-auto">
-                  <Nav.Link
-                    href="/"
-                    active={currentPage == 0}
-                    title="Trang chủ"
-                  >
-                    Trang chủ
-                  </Nav.Link>
-
-                  <NavDropdown
-                    active={currentPage == 1}
-                    title="Sản phẩm"
-                    id="primary-nav-dropdown"
-                  >
-                    {categories &&
-                      categories.map((category: CategoryModel) => {
-                        return (
-                          <React.Fragment key={category.id}>
-                            <NavDropdown.Item
-                              href={`/products/${category.alt}-${category.id}`}
-                              title={category.title}
-                              className={
-                                category.children.length > 0
-                                  ? "dropdown-submenu"
-                                  : ""
-                              }
-                            >
-                              {category.title}
-                            </NavDropdown.Item>
-
-                            {category.children &&
-                              category.children.map((child: CategoryModel) => {
-                                return (
-                                  <NavDropdown.Item
-                                    key={child.id}
-                                    href={`/products/${child.alt}-${child.id}`}
-                                    title={child.title}
-                                    className="dropdown-submenu-item"
-                                  >
-                                    {child.title}
-                                  </NavDropdown.Item>
-                                );
-                              })}
-                          </React.Fragment>
-                        );
-                      })}
-                  </NavDropdown>
-
-                  <Nav.Link
-                    href="/blog/video"
-                    active={currentPage == 2}
-                    title="Video"
-                  >
-                    Video
-                  </Nav.Link>
-
-                  <Nav.Link
-                    href="/policy"
-                    active={currentPage == 3}
-                    title="Hướng dẫn mua hàng"
-                  >
-                    Hướng dẫn mua hàng
-                  </Nav.Link>
-
-                  <Nav.Link
-                    href="/contact"
-                    active={currentPage == 4}
-                    title="Liên hệ"
-                  >
-                    Liên hệ
-                  </Nav.Link>
-                </Nav>
-              </Navbar.Collapse>
-            </Container>
-          </Navbar>
+          <Menu/>
         </div>
       </header>
 

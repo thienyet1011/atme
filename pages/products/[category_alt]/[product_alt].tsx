@@ -7,8 +7,6 @@ import { GetStaticProps } from "next";
 
 import numeral from "numeral";
 
-import { useAppContext } from '../../../context';
-
 import { CategoryModel } from "../../../model/Category";
 import { getCategories } from "../../api/categories";
 import { getCategoryById } from "../../api/categories/[category_id]";
@@ -34,14 +32,8 @@ export interface ProductProps {
 };
 
 export default function Product({category, product, similars}: ProductProps) {
-  const { categories, setPage } = useAppContext();
-
-  useEffect(() => {
-    setPage(1);
-  }, [setPage])
-
   return (
-    <Layout categories={categories}>
+    <Layout>
       <div id="Render-Body">
         <Container>
           <MainNav>
@@ -212,7 +204,6 @@ export default function Product({category, product, similars}: ProductProps) {
             <Col md={3}>
                 {category && (<RightMenu
                   currentCategory={category.id}
-                  categories={categories}
                 />)}
             </Col>
           </Row>

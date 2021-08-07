@@ -1,18 +1,9 @@
-import { useEffect } from "react";
 import Image from "next/image";
 import { Container, Row, Col } from "react-bootstrap";
-
-import { useAppContext } from '../context';
 
 import Layout from "../components/layout";
 
 export default function Policy() {
-  const { setPage } = useAppContext();
-
-  useEffect(() => {
-    setPage(3);
-  }, [setPage])
-
   return (
     <Layout>
       <div className="body-content-page">

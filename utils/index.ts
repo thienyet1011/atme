@@ -21,7 +21,8 @@ export function getValueAsString(value: string | string[]) {
     return !str || str.toLowerCase() === 'all' ? null : str;
 }
 
-export const onCompleted = async (data: any, err: any, router: NextRouter, queryClient: QueryClient) => {
+export async function onCompleted(data: any, err: any, 
+  router: NextRouter, queryClient: QueryClient) {
     if (err) {
       const {status, payload} = JSON.parse(err.message);
     //   showError(payload);
@@ -37,4 +38,12 @@ export const onCompleted = async (data: any, err: any, router: NextRouter, query
     }
   
     return data;
-  };
+};
+
+export function isActive(pathname: string, current_pathname: string) {
+  if (pathname !== "/") {
+    const active = current_pathname.includes(pathname);
+    return active;
+  }
+  else return current_pathname === pathname;
+}

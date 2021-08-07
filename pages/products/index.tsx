@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 
 import { Container, Row, Col, Spinner } from 'react-bootstrap';
 import { GetStaticProps } from 'next';
@@ -8,17 +8,15 @@ import deepEqual from "fast-deep-equal";
 import { useRouter } from "next/router";
 import { useQuery, useQueryClient } from 'react-query';
 
-import { useAppContext } from '../../context';
-
 import { ProductModel } from '../../model/Product';
 import { getProducts } from '../api/products';
 
 import { onCompleted } from '../../utils';
 
 import Layout from '../../components/layout';
-import MainNav from '../../components/MainNav';
+import MainNav from '../../components/common/MainNav';
+import RightMenu from '../../components/common/RightMenu';
 import ProductsContainer from '../../components/categories/ProductsContainer';
-import RightMenu from '../../components/RightMenu';
 
 import { getProductsFn } from '../../queries-fn/product.fn';
 import { GET_PRODUCTS } from '../../queries-fn/keys';
@@ -32,14 +30,8 @@ export default function ProductPage({products, totalPages}: ProductPageProps) {
   const queryClient = useQueryClient();
   const router = useRouter();
 
-  const { categories, setPage } = useAppContext();  
-
   const {query, pathname} = router;
   const [serverQuery] = useState(query);
-
-  useEffect(() => {
-    setPage(1);
-  }, [setPage])
 
   // Fetch fb from API
   const { isLoading, data } = useQuery([GET_PRODUCTS, query], 
@@ -60,7 +52,7 @@ export default function ProductPage({products, totalPages}: ProductPageProps) {
           <Spinner className="spinner-md" animation="border" variant="warning" />
         </div>
 
-        <Layout categories={categories}>
+        <Layout>
           <div id="Render-Body">
             <div className="container">
               <MainNav />
@@ -75,9 +67,7 @@ export default function ProductPage({products, totalPages}: ProductPageProps) {
                   />
                 </Container>
 
-                <Col md={3}>
-                  <RightMenu categories={categories} />
-                </Col>
+                <Col md={3}><RightMenu /></Col>
               </Row>
             </div>
           </div>

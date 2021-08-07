@@ -3,7 +3,7 @@ import Link from "next/link";
 
 import classNames from "classnames";
 
-import { getValueAsNumber } from "../utils";
+import { getValueAsNumber } from "../../utils";
 
 export default function Pagination({query, pathname, totalPages}) {
   const renderPagination = () => {

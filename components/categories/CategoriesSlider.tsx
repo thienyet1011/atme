@@ -2,7 +2,7 @@ import React from "react";
 import Image from "next/image";
 import Link from "next/link";
 
-import Sliders from "../Sliders";
+import Sliders from "../common/Sliders";
 import { CategoryModel } from "../../model/Category";
 
 export interface CategoriesSliderProps {
@@ -24,8 +24,8 @@ export default function CategoriesSlider({categories}: CategoriesSliderProps) {
                     <Image
                       src={prefix + category.image}
                       alt={category.title}
-                      width="2568"
-                      height="1926"
+                      width={2568}
+                      height={1926}
                       layout="responsive"
                     />
                     <div className="caption">{category.title}</div>

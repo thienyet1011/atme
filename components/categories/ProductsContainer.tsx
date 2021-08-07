@@ -5,7 +5,7 @@ import { Row, Col } from "react-bootstrap";
 
 import numeral from "numeral";
 
-import Pagination from "../Pagination";
+import Pagination from "../common/Pagination";
 
 import { ProductModel } from "../../model/Product";
 

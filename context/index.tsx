@@ -1,12 +1,13 @@
 import React, { ReactNode, useContext, useEffect, useMemo, useState } from "react";
 
+import { useRouter } from "next/router";
+
 import { CategoryModel } from "../model/Category";
 import { getCategoriesFn } from "../queries-fn/category.fn";
 
 export type AppContextType = {
   categories: CategoryModel[];
-  currentPage: number;
-  setPage: (page: number) => void;
+  route: string;
 };
 
 export const AppContext = React.createContext<AppContextType>(
@@ -19,7 +20,9 @@ export function AppProvider({
   children: ReactNode;
 }): JSX.Element {
   const [categories, setCategories] = useState<CategoryModel[]>([]);
-  const [currentPage, setCurrentPage] = useState<number>(0);
+  const [route, setRoute] = useState<string>("/");
+
+  const { pathname } = useRouter();
 
   useEffect(() => {
     getCategoriesFn()
@@ -30,9 +33,9 @@ export function AppProvider({
       .catch((err) => console.log("Error: ", err.message));
   }, []);
 
-  const setPage = (page: number) => {
-    setCurrentPage(page);
-  }
+  useEffect(() => {
+    setRoute(pathname);
+  }, [pathname])
 
   // Make the provider update only when it should.
   // We only want to force re-renders if the user,
@@ -46,10 +49,9 @@ export function AppProvider({
   const defaultValue = useMemo(
     () => ({
       categories,
-      currentPage,
-      setPage,
+      route
     }),
-    [categories, currentPage]
+    [categories, route]
   );
 
   return (
