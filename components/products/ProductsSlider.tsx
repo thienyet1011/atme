@@ -4,7 +4,7 @@ import Link from "next/link";
 
 import numeral from "numeral";
 
-import Sliders from "../Sliders";
+import Sliders from "../common/Sliders";
 import { ProductModel } from "../../model/Product";
 
 interface ProductsSliderProps {

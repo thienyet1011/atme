@@ -21,9 +21,9 @@ import { getProductById } from "../../api/products/[id]";
 import { getValueAsString } from "../../../utils";
 
 import Layout from "../../../components/layout";
-import MainNav from "../../../components/MainNav";
+import MainNav from "../../../components/common/MainNav";
+import RightMenu from "../../../components/common/RightMenu";
 import ProductsSlider from "../../../components/products/ProductsSlider";
-import RightMenu from "../../../components/RightMenu";
 
 export interface ProductProps {
   category: CategoryModel;
