@@ -1,0 +1,5 @@
+export const GET_ERRORS = "GET_ERRORS";
+
+export const CHANGE_PASSWORD = "CHANGE_PASSWORD";
+export const FORGOT_PASSWORD = "FORGOT_PASSWORD";
+export const SET_CURRENT_USER = "SET_CURRENT_USER";

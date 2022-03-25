@@ -21,9 +21,9 @@ import { getProductById } from "../../api/products/[id]";
 import { getValueAsString } from "../../../utils";
 
 import Layout from "../../../components/layout";
-import MainNav from "../../../components/common/MainNav";
+import MainNav from "../../../components/common/Breadcrumb";
 import RightMenu from "../../../components/common/RightMenu";
-import ProductsSlider from "../../../components/products/ProductsSlider";
+import ProductSlider from "../../../components/products/ProductSlider";
 
 export interface ProductProps {
   category: CategoryModel;
@@ -34,7 +34,7 @@ export interface ProductProps {
 export default function Product({category, product, similars}: ProductProps) {
   return (
     <Layout>
-      <div id="Render-Body">
+      <div id="render-body">
         <Container>
           <MainNav>
             {category && (<li className="breadcrumb-item">
@@ -218,7 +218,7 @@ export default function Product({category, product, similars}: ProductProps) {
             </Col>
 
             <Col md={12}>
-              {similars && (<ProductsSlider products={similars}  />)}
+              {similars && (<ProductSlider products={similars}  />)}
             </Col>
           </Row>
         </Container>

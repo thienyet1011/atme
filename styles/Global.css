@@ -28,6 +28,10 @@ a {
     cursor: pointer;
 }
 
+a:hover {
+    color: #fec52d;
+}
+
 p {
     margin: 0 0 10px;
 }
@@ -138,11 +142,11 @@ ol {
 }
 
 input.form-control, select.form-control {
-    border-radius: 0px;
+    border-radius: 4px;
     height: 40px;
 }
 
-#Render-Body {
+#render-body {
     position: relative;
     float: left;
     width: 100%;
@@ -2562,7 +2566,7 @@ hr {
     width: 100%;
     height: auto;
     background-size: contain;
-    z-index: 9999;
+    z-index: 1100;
     box-shadow: none;
     background: #000000e3;
 }
@@ -4096,3 +4100,74 @@ ul.pagination {
     line-height: 24px !important;
 }
 /*#endregion */
+
+.left-sidebar {
+    border-right: 1px solid rgba(0, 0, 0, 0.125);
+}
+
+.margin-vertical-10 {
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.margin-vertical-50 {
+    margin-top: 50px;
+    margin-bottom: 50px;
+}
+
+.padding-vertical-50 {
+    padding-top: 50px;
+    padding-bottom: 50px;
+}
+
+.ck-editor__main .ck-content {
+    min-height: 300px;
+}
+
+.dropzone {
+    width: 150px;
+    height: 150px;
+    min-height: 0px !important;
+}
+
+.dropzone {
+    background: "white";
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.dropzone {
+    min-height: 200px;
+    border-width: 2px;
+    border-style: dashed;
+    border-color: #fec52d;
+    border-image: initial;
+}
+
+.thumb, .add-thumb {
+    float: left;
+    margin-right: 10px;
+}
+
+.thumb-inner img {
+    width: 150px;
+    height: 150px;
+    object-fit: contain;
+    border-radius: 8px;
+}
+
+.dropzone, .dropzone * {
+    box-sizing: border-box;
+}
+
+.section-content {
+    border-right: 1px solid rgba(0, 0, 0, 0.125);
+}
+
+.form-control:focus {
+    border-color: #fec52d !important;
+    -webkit-box-shadow: 0 0 0 0.2rem rgba(254, 197,  45, 0.25) !important;
+    box-shadow: 0 0 0 0.2rem rgba(254, 197,  45, 0.25) !important;
+}

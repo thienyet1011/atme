@@ -1,0 +1,15 @@
+.hasError {
+    border-color: #b21f2d !important;
+}
+
+.hasError:focus {
+    border-color: #b21f2d !important;
+    box-shadow: 0 0 0 0.2rem rgb(178 31 45 / 25%);
+}
+
+.withError {
+    display: block;
+    margin-top: 5px;
+    margin-bottom: 10px;
+    color: #b21f2d;
+}

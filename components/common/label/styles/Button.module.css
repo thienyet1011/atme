@@ -1,0 +1,7 @@
+.button {
+    min-width: 100px;
+    font-weight: 600;
+    color: rgba(0, 0, 0, 0.7);
+    background-color: #fec52d;
+    border-color: #d39e00;
+}

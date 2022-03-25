@@ -20,9 +20,9 @@ import { getProductsPageByCategory } from "../../api/categories/[category_id]/pr
 import { getValueAsString, onCompleted } from "../../../utils";
 
 import Layout from "../../../components/layout";
-import MainNav from "../../../components/common/MainNav";
+import MainNav from "../../../components/common/Breadcrumb";
 import RightMenu from "../../../components/common/RightMenu";
-import ProductsContainer from "../../../components/categories/ProductsContainer";
+import ProductGrid from "../../../components/products/ProductGrid";
 
 import { getProductsByCategoryFn } from "../../../queries-fn/product.fn";
 import { GET_PRODUCTS_OF_CATEGORY } from "../../../queries-fn/keys";
@@ -74,7 +74,7 @@ export default function CategoryPage({
       </div>
 
       <Layout>
-        <div id="Render-Body">
+        <div id="render-body">
           <div className="container">
             <MainNav>
               {category && (<li className="breadcrumb-item">
@@ -89,7 +89,7 @@ export default function CategoryPage({
 
             <Row className="row">
               <Container className="col-md-9">
-                <ProductsContainer
+                <ProductGrid
                   products={data.products}
                   totalPages={totalPages}
                   query={query}

@@ -38,13 +38,12 @@ export default function Sliders({children, dots, length}) {
       speed: 500,
       slidesToShow: Math.min(length, 4),
       slidesToScroll: Math.min(length, 4),
-      initialSlide: 0,
       responsive,
     };
 
     return (
       <Slider dots={dots} {...settings}>
-          {children}
+        {children}
       </Slider>
     );
 };

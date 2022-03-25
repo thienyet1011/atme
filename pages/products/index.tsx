@@ -14,9 +14,9 @@ import { getProducts } from '../api/products';
 import { onCompleted } from '../../utils';
 
 import Layout from '../../components/layout';
-import MainNav from '../../components/common/MainNav';
+import MainNav from '../../components/common/Breadcrumb';
 import RightMenu from '../../components/common/RightMenu';
-import ProductsContainer from '../../components/categories/ProductsContainer';
+import ProductGrid from '../../components/products/ProductGrid';
 
 import { getProductsFn } from '../../queries-fn/product.fn';
 import { GET_PRODUCTS } from '../../queries-fn/keys';
@@ -53,13 +53,13 @@ export default function ProductPage({products, totalPages}: ProductPageProps) {
         </div>
 
         <Layout>
-          <div id="Render-Body">
+          <div id="render-body">
             <div className="container">
               <MainNav />
 
               <Row className="row">
                 <Container className="col-md-9">
-                  <ProductsContainer
+                  <ProductGrid
                     products={data.products}
                     totalPages={totalPages}
                     query={query}
